@@ -8,7 +8,7 @@ import java.net.Socket;
  * The ClientProxy is the interface between the Risk game back end
  * and the network.
  */
-public class ClientProxy extends Thread {
+public class ClientProxy {
 
 	private Socket socket;
 	private DataInputStream input;
@@ -24,12 +24,18 @@ public class ClientProxy extends Thread {
 		}
 	}
 	
-	public void run()
-	{
-		while (true)
-		{
+	private class Reader extends Thread {
+
+		public void run() {
 			
+//			while(true)
+//			{
+//				
+//			}
 		}
+
+
 	}
 	
 }
+
