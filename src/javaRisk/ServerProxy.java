@@ -8,7 +8,7 @@ import java.net.Socket;
  * The ServerProxy is the interface between the Risk game UI
  * and the network.
  */
-public class ServerProxy extends Thread {
+public class ServerProxy {
 
 	private Socket socket;
 	private DataInputStream input;
@@ -24,11 +24,20 @@ public class ServerProxy extends Thread {
 		}
 	}
 	
-	public void run()
-	{
-		while (true) {
-			
+	
+
+	private class Reader extends Thread {
+
+		public void run() {
+
+			//		while(true)
+			//		{
+			//			
+			//		}
+
 		}
+
+
 	}
 	
 }
