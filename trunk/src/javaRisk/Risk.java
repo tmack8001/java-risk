@@ -1,6 +1,9 @@
 package javaRisk;
+
 import java.io.IOException;
 import java.net.Socket;
+
+import javax.swing.JOptionPane;
 
 /**
  * The Risk class is the class the user runs.
@@ -11,10 +14,10 @@ public class Risk {
 	public static void main (String args[])
 	{
 		try {
-			//TODO dont use constants
-			Socket s = new Socket("localhost", Constants.PORT);
+			String host = JOptionPane.showInputDialog("Connect to server: ");
+			Socket s = new Socket(host, Constants.PORT);
 
-			new ServerProxy(s).start();
+			ServerProxy server = new ServerProxy(s);
 			
 		} catch (IOException e)
 		{
