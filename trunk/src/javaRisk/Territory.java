@@ -1,11 +1,7 @@
-package javaRisk;
 /**
  * Territory.java
  */
-import Army;
-
-import java.util.ArrayList;
-import java.util.Iterator;
+package javaRisk;
 
 /**
  * @author Trevor Mack
@@ -14,9 +10,14 @@ import java.util.Iterator;
 public class Territory {
 
 	private int index;
-	private ArrayList<Territory> adjacent;
+	//private final ArrayList<Territory> adjacent;
 	private Army army;
-	private int row,column;
+	private final int row,column;
+	
+	private static final boolean ATTACK = true;
+	private static final boolean DEFEND = false;
+	
+	private static final int MINIMUM_ARMY = 1;
 	
 	/**
 	 * Creates a new territory with the given index, row, and column numbers.
@@ -31,40 +32,69 @@ public class Territory {
 		this.column = column;
 	}
 	
-	//TODO: should the territories know what territories are adjacent to them? or the GameBoard?
-	public boolean isAdjacent(Territory territory) {
-		Iterator<Territory> adjacent = getAdjacent().iterator();
-		while(adjacent.hasNext()) {
-			if( adjacent.equals(territory))
-				return true;
+	/**
+	 * 
+	 * @param territory
+	 * @return
+	 */
+	public boolean attack(Territory territory) {
+		if(this.isAdjacent(territory)) {
+			Army defendingArmy = territory.getArmy();
+			Army attackingArmy = territory.getArmy();
+			
+			if(attackingArmy.getRoll( ATTACK ) > defendingArmy.getRoll( DEFEND )) {
+				Army deployedArmy = new Army(getOwner(), attackingArmy.getCount()-MINIMUM_ARMY);
+				attackingArmy.setCount( MINIMUM_ARMY );
+				
+				territory.setArmy(deployedArmy);
+			}else {
+				attackingArmy.setCount( MINIMUM_ARMY );
+			}
+			return true;
 		}
 		return false;
 	}
 	
 	/**
+	 * Calculates if a territory is adjacent to the current territory.
 	 * 
+	 * @param territory - territory to check for adjacency
+	 * @return true, if the territories are adjacent
 	 */
-	public void addArmy(Army newArmy) {
-		if(army == null) {
-			army = newArmy;
-			army.setTerritory(this);
-		}else {
-			addArmy(newArmy.getCount());
-		}
+	public boolean isAdjacent(Territory territory) {
+		int rowDiff = Math.abs( getRow() - territory.getRow() );
+		int colDiff = Math.abs( getColumn() - territory.getColumn() );
+		
+		//false, if either same territory or further than 1 square away including corner adjacent
+		return (rowDiff - colDiff != 0 || rowDiff <= 1 || colDiff <= 1);
 	}
-	
-	public void addArmy(int count) {
-		if(army == null) {
-			addArmy(new Army(getOwner(), count));
-		}else {
-			army.changeCount(count);
-		}
-	}
-	
+
+	/**
+	 * Getter for the army residing on this territory.
+	 * @return army on this territory
+	 */
 	public Army getArmy() {
 		return army;
 	}
 	
+	/**
+	 * Sets the terroritory's army to the "invading" army.
+	 * 
+	 * @param newArmy - army moving to this territory
+	 */
+	public void setArmy(Army newArmy) {
+		if(newArmy.getPlayer() != army.getPlayer()) {
+			army.getPlayer().removeTerritory(this);
+			newArmy.getPlayer().addTerritory(this);
+		}
+		army = newArmy;
+	}
+	
+	/**
+	 * Finds the player that owns the resident army.
+	 * 
+	 * @return player associated with the army
+	 */
 	public Player getOwner() {
 		if(army == null) {
 			return null;
@@ -73,23 +103,30 @@ public class Territory {
 		}
 	}
 	
-	//TODO: should the territories know what territories are adjacent to them? or the GameBoard?
-	public ArrayList<Territory> getAdjacent() {
-		return adjacent;
-	}
-	
+	/**
+	 * Getter for the unique index number. 
+	 * 
+	 * @return index of territory
+	 */
 	public int getIndex() {
 		return index;
 	}
 	
+	/**
+	 * Getter for the row value.
+	 * 
+	 * @return row position number
+	 */
 	public int getRow() {
 		return row;
 	}
 	
+	/**
+	 * Getter for the column value.
+	 * 
+	 * @return column position number
+	 */
 	public int getColumn() {
 		return column;
-	}
-	
-	
-	
+	}	
 }

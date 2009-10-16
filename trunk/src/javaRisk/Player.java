@@ -1,10 +1,10 @@
+/**
+ * Player.java
+ */
 package javaRisk;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
-/**
- * 
- */
 
 /**
  * @author Trevor Mack
@@ -14,7 +14,7 @@ public class Player {
 
 	private String name;
 	private boolean alive;
-	private ArrayList<Territory> territories;
+	private HashMap<Integer, Territory> territories;
 	
 	/** Create a new Player with the given name.
 	 * 
@@ -22,7 +22,7 @@ public class Player {
 	 */
 	public Player( String name ) {
 		this.name = name;
-		territories = new ArrayList<Territory>();
+		territories = new HashMap<Integer, Territory>();
 		alive = true;
 	}
 	
@@ -37,16 +37,14 @@ public class Player {
 	 * @return
 	 */
 	public boolean isAlive() {
-		if(getTerritories().size() == 0)
-			alive = false;
-		return alive;
+		return alive && getTerritories().size() > 0;
 	}
 	
 	public int getTotalArmies() {
 		int totalArmies = 0;
-		Iterator<Territory> territories = getTerritories().iterator();
-		while(territories.hasNext()) {
-			totalArmies += territories.next().getArmy().getCount();
+		Iterator<Integer> iterator = getTerritories().keySet().iterator();
+		while(iterator.hasNext()) {
+			totalArmies += territories.get(iterator.next()).getArmy().getCount();
 		}
 		return totalArmies;
 	}
@@ -61,8 +59,20 @@ public class Player {
 	/**
 	 * @return the territories
 	 */
-	public ArrayList<Territory> getTerritories() {
+	public HashMap<Integer, Territory> getTerritories() {
 		return territories;
+	}
+	
+	public void addTerritory(Territory territory) {
+		territories.put(new Integer(territory.getIndex()), territory);
+	}
+	
+	public boolean removeTerritory(Territory territory) {
+		if(territories.containsKey(new Integer(territory.getIndex()))) {
+			territories.remove(new Integer(territory.getIndex()));
+			return true;
+		}
+		return false;
 	}
 	
 	
