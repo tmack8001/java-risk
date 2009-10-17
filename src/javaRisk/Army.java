@@ -9,12 +9,11 @@ package javaRisk;
  */
 public class Army {
 
-	private Territory territory;
 	private Player player;
 	private int count;
 	
-	private final int MAX_ATTACK = 3;
-	private final int MAX_DEFEND = 3;
+	private final int MAX_ATTACK = 6;
+	private final int MAX_DEFEND = 5;
 	
 	public Army(Player player, int count) {
 		this.player = player;
@@ -33,30 +32,21 @@ public class Army {
 	public int getRoll( boolean attack ) {
 		int armyCount = getCount();
 		if( attack ) {
-			if( armyCount > MAX_ATTACK ) {
+			if( armyCount > MAX_ATTACK )
 				armyCount = MAX_ATTACK;
-			}
-			armyCount = armyCount - 1;
+			else 
+				armyCount = armyCount - 1;
 		}else {
-			if( armyCount > MAX_DEFEND ) {
+			if( armyCount > MAX_DEFEND )
 				armyCount = MAX_DEFEND;
-			}
 		}
 		
 		int totalRoll = 0;
 		for(int i=0; i<armyCount; i++) {
-			int diceRoll = (int)(Math.random()*6);
+			int diceRoll = (int)(Math.random()*6) + 1;
 			totalRoll += diceRoll;
 		}
 		return totalRoll;
-	}
-	
-	public Territory getTerritory() {
-		return territory;
-	}
-
-	public void setTerritory(Territory newTerritory) {
-		territory = newTerritory;
 	}
 	
 	public Player getPlayer() {
