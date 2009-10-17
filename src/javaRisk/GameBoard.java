@@ -5,6 +5,7 @@ package javaRisk;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Representation of a general Risk Game.
@@ -42,7 +43,7 @@ public class GameBoard {
 	}
 	
 	public void placeArmies() {
-		int terrPerPlayer = (int) (territories.size() / players.size()) + 1;
+		int terrPerPlayer = (int) (territories.size() / players.size());
 		for(int i=0; i<territories.size(); i++) {
 			boolean assigned = false;
 			while(!assigned) {
@@ -65,18 +66,18 @@ public class GameBoard {
 		territory.setArmy( new Army(players.get(owner), size) );
 	}
 	
-	public boolean winnerExists() {
+	public Player getWinner() {
 		Iterator<Player> iterator = players.iterator();
 		int numAlive = 0;
+		Player winner = null;
 		while( iterator.hasNext() ) {
-			if(iterator.next().isAlive()) {
-				numAlive++;
-			}
-			if(numAlive > 1) {
-				return false;
+			winner = iterator.next();
+			if(winner.isAlive()) {
+				if(++numAlive > 1)
+					return null;
 			}
 		}
-		return true;
+		return winner;
 	}
 	
 	public int getCurrentMove() {
@@ -100,17 +101,25 @@ public class GameBoard {
 		
 		gb.initializeBoard();
 		gb.setCurrentMove(0);
-		while(!gb.winnerExists()) {
+		while(gb.getWinner() == null) {
 			Player attacker = players.get(gb.getCurrentMove());
 			gb.incrementMove();
 			Player defender = players.get(gb.getCurrentMove());
 			boolean attacked = false;
+			System.out.println("ATTACKER: " +attacker.getName());
+			System.out.println("DEFENDER: " +defender.getName());
 			while(!attacked) {
-				int source = (int)(Math.random()*attacker.getTerritories().size());
-				int target = (int)(Math.random()*defender.getTerritories().size());
-				attacked = gb.territories.get(source).attack(gb.territories.get(target));
+				Territory attacking = attacker.getRandomTerritory();
+				Territory defending = attacking.getAdjacent(defender.getTerritories());
+				//Territory defending = defender.getRandomTerritory();
+				if(defending != null)
+					attacked = attacking.attack(defending);
+				else {
+					System.out.println("INFINITE");
+				}
 			}
-			gb.incrementMove();
 		}
+		System.out.println("WINNER FOUND!");
+		System.out.println(gb.getWinner().getName());
 	}
 }
