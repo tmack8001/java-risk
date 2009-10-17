@@ -38,11 +38,15 @@ public class Territory {
 	 * @return
 	 */
 	public boolean attack(Territory territory) {
-		if(this.isAdjacent(territory)) {
+		if(!getOwner().equals(territory.getOwner()) && getArmy().getCount() > 1 && isAdjacent(territory)) {
 			Army defendingArmy = territory.getArmy();
-			Army attackingArmy = territory.getArmy();
+			Army attackingArmy = getArmy();
 			
-			if(attackingArmy.getRoll( ATTACK ) > defendingArmy.getRoll( DEFEND )) {
+			int attackingRoll = attackingArmy.getRoll( ATTACK );
+			int defendingRoll = defendingArmy.getRoll( DEFEND );
+			System.out.println(getOwner().getName()+" attack ["+attackingArmy.getCount()+"]: "+attackingRoll);
+			System.out.println(territory.getOwner().getName()+" defend ["+defendingArmy.getCount()+"]: "+defendingRoll);
+			if(attackingRoll > defendingRoll) {
 				Army deployedArmy = new Army(getOwner(), attackingArmy.getCount()-MINIMUM_ARMY);
 				attackingArmy.setCount( MINIMUM_ARMY );
 				
@@ -83,10 +87,10 @@ public class Territory {
 	 * @param newArmy - army moving to this territory
 	 */
 	public void setArmy(Army newArmy) {
-		if(newArmy.getPlayer() != army.getPlayer()) {
-			army.getPlayer().removeTerritory(this);
-			newArmy.getPlayer().addTerritory(this);
+		if(army != null && newArmy.getPlayer() != army.getPlayer()) {
+			army.getPlayer().removeTerritory(this);	
 		}
+		newArmy.getPlayer().addTerritory(this);
 		army = newArmy;
 	}
 	

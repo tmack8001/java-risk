@@ -12,6 +12,7 @@ import java.util.Iterator;
  */
 public class Player {
 
+	private int index;
 	private String name;
 	private boolean alive;
 	private HashMap<Integer, Territory> territories;
@@ -20,7 +21,8 @@ public class Player {
 	 * 
 	 * @param name the player's name
 	 */
-	public Player( String name ) {
+	public Player( int index, String name ) {
+		this.index = index;
 		this.name = name;
 		territories = new HashMap<Integer, Territory>();
 		alive = true;
