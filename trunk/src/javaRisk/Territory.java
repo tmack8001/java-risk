@@ -3,6 +3,9 @@
  */
 package javaRisk;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 /**
  * @author Trevor Mack
  *
@@ -44,8 +47,8 @@ public class Territory {
 			
 			int attackingRoll = attackingArmy.getRoll( ATTACK );
 			int defendingRoll = defendingArmy.getRoll( DEFEND );
-			System.out.println(getOwner().getName()+" attack ["+attackingArmy.getCount()+"]: "+attackingRoll);
-			System.out.println(territory.getOwner().getName()+" defend ["+defendingArmy.getCount()+"]: "+defendingRoll);
+			System.out.println(getIndex()+" attack ["+attackingArmy.getCount()+"]: "+attackingRoll);
+			System.out.println(territory.getIndex()+" defend ["+defendingArmy.getCount()+"]: "+defendingRoll);
 			if(attackingRoll > defendingRoll) {
 				Army deployedArmy = new Army(getOwner(), attackingArmy.getCount()-MINIMUM_ARMY);
 				attackingArmy.setCount( MINIMUM_ARMY );
@@ -70,7 +73,18 @@ public class Territory {
 		int colDiff = Math.abs( getColumn() - territory.getColumn() );
 		
 		//false, if either same territory or further than 1 square away including corner adjacent
-		return (rowDiff - colDiff != 0 || rowDiff <= 1 || colDiff <= 1);
+		return (rowDiff + colDiff == 1);
+	}
+	
+	public Territory getAdjacent(HashMap<Integer, Territory> territories2) {
+		Iterator<Integer> iterator = territories2.keySet().iterator();
+		while(iterator.hasNext()) { 
+			Territory territory = territories2.get(iterator.next());
+			if( isAdjacent(territory) ) {
+				return territory;
+			}
+		}
+		return null;
 	}
 
 	/**

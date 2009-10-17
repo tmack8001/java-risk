@@ -4,6 +4,7 @@
 package javaRisk;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 
 /**
@@ -77,6 +78,13 @@ public class Player {
 		return false;
 	}
 	
+	public Territory getTerritory(int index) {
+		return territories.get(new Integer(index));
+	}
 	
-	
+	public Territory getRandomTerritory() {
+		Random generator = new Random();
+		Object[] values = territories.values().toArray();
+		return (Territory) (values[generator.nextInt(values.length)]);
+	}
 }
