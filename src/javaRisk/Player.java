@@ -2,6 +2,7 @@
  * Player.java
  */
 package javaRisk;
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -16,15 +17,17 @@ public class Player {
 	private int index;
 	private String name;
 	private boolean alive;
+	private Color color;
 	private HashMap<Integer, Territory> territories;
 	
 	/** Create a new Player with the given name.
 	 * 
 	 * @param name the player's name
 	 */
-	public Player( int index, String name ) {
+	public Player( int index, String name, Color color ) {
 		this.index = index;
 		this.name = name;
+		this.color = color;
 		territories = new HashMap<Integer, Territory>();
 		alive = true;
 	}
@@ -86,5 +89,9 @@ public class Player {
 		Random generator = new Random();
 		Object[] values = territories.values().toArray();
 		return (Territory) (values[generator.nextInt(values.length)]);
+	}
+	
+	public String toString() {
+		return getName() + ":     " + getTotalArmies();
 	}
 }
