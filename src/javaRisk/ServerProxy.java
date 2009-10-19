@@ -8,7 +8,7 @@ import java.net.Socket;
  * The ServerProxy is the interface between the Risk game UI
  * and the network.
  */
-public class ServerProxy {
+public class ServerProxy implements UIListener {
 
 	private GUI gui;
 	private ClientModel model;
@@ -25,6 +25,24 @@ public class ServerProxy {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void endTurn() {
+		output.writeByte(Constants.END_TURN);
+	}
+	
+	public void startAttack(int territory) {
+		// check with local model to see what to do?
+	}
+	
+	public void launchAttack(int src, int dest) {
+		output.writeByte(Constants.ATTACK);
+		output.writeInt(src);
+		output.writeInt(dest);
+	}
+	
+	public void surrender() {
+		output.writeByte(Constants.SURRENDER);
 	}
 	
 	public void turnIndicator(int player)
