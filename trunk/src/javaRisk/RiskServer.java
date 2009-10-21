@@ -1,4 +1,5 @@
 package javaRisk;
+import java.awt.Color;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,10 +23,18 @@ public class RiskServer {
 		try {
 			ServerSocket ss = new ServerSocket(Constants.PORT);
 			System.out.println("Server waiting on port " + ss.getLocalPort());
+			ServerModel model = new ServerModel();
+			int index = 0;
+			Color c = Color.red;
+			String name = "bob";
 			while (acceptingClients) {
 				Socket sock = ss.accept();
 				System.out.println("Connect: " + sock.getRemoteSocketAddress().toString());
-				new ClientProxy(sock).start();
+				ClientProxy cp = new ClientProxy(sock);
+				cp.setModel(model);
+				cp.start();
+				
+				model.addPlayer(new Player(index++, name, c ));
 				
 			}
 			

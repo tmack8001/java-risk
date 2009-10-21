@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 public class GUI extends JFrame {
 
@@ -20,6 +24,9 @@ public class GUI extends JFrame {
 	private JButton endTurn = new JButton("End Turn");
 	private JLabel attackRoll = new JLabel();
 	private JLabel defendRoll = new JLabel();
+	
+	private JLabel[] gridTiles;
+	private JLabel[] playerTitles;
 
 	public GUI()
 	{
@@ -27,9 +34,19 @@ public class GUI extends JFrame {
 		this.setLayout(new BorderLayout());
 		  
 		JPanel mainGrid = new JPanel(new GridLayout(7,7));
+		gridTiles = new JLabel[49];
 		for (int i = 0 ; i < 49 ; i++)
 		{
-			mainGrid.add(new JLabel(""+(i + 1), JLabel.CENTER));
+			gridTiles[i] = new JLabel(Integer.toString(i+1), JLabel.CENTER);
+			gridTiles[i].setOpaque(true);
+			gridTiles[i].addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					// TODO Auto-generated method stub
+					super.mouseClicked(e);
+				}
+			});
+			
+			mainGrid.add(gridTiles[i]);
 		}
 		this.add(mainGrid, BorderLayout.CENTER);
 		
@@ -45,18 +62,25 @@ public class GUI extends JFrame {
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(1,0));
 		
-		buttonPanel.add(new JLabel("  Player 1  "));
-		buttonPanel.add(new JLabel("  Player 2  "));
-		buttonPanel.add(new JLabel("  Player 3  "));
-		buttonPanel.add(new JLabel("  Player 4  "));
-		buttonPanel.add(new JLabel("  Player 5  "));
-		buttonPanel.add(new JLabel("  Player 6  "));
+		playerTitles = new JLabel[6];
 		
+		for (int i = 0 ; i < playerTitles.length ; i++)
+		{
+		
+			playerTitles[i] = new JLabel("Player " + (i+1));
+			buttonPanel.add(playerTitles[i]);
+			
+		}
 		
 		
 		endTurn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				listener.endTurn();
+				try {
+					listener.endTurn();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 			}
 			
@@ -74,7 +98,12 @@ public class GUI extends JFrame {
 	}
 
 	public void showPlayerTurn(int player) {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < playerTitles.length ; i++)
+		{
+			JLabel j = playerTitles[i];
+			j.setText("Player " + (i+1));
+		}
+		playerTitles[player].setText(">> " + playerTitles[player].getText() + " <<");
 		
 	}
 
@@ -84,13 +113,13 @@ public class GUI extends JFrame {
 	}
 
 	public void showAttack(int src, int dest) {
-		// TODO Auto-generated method stub
+		gridTiles[src].setBorder(new BevelBorder(BevelBorder.RAISED));
+		gridTiles[dest].setBorder(new LineBorder(gridTiles[src].getBackground(), 10));
 		
 	}
 
 	public void showAttackRoll(int a_roll) {
 		attackRoll.setText(Integer.toString(a_roll));
-		
 	}
 
 	public void showDefenseRoll(int d_roll) {
@@ -103,7 +132,8 @@ public class GUI extends JFrame {
 	}
 
 	public void updateTerritory(int index, Color color, int size) {
-		// TODO Auto-generated method stub
+		gridTiles[index].setBackground(color);
+		gridTiles[index].setText(Integer.toString(size));
 		
 	}
 
@@ -112,11 +142,34 @@ public class GUI extends JFrame {
 		this.listener = listener;
 	}
 	
-	public static void main(String args[])
+	public static void main(String args[]) throws InterruptedException
 	{
 		//TESTING THE GUI
 		
-		new GUI().setVisible(true);
+		GUI g = new GUI();
+		g.setVisible(true);
+		java.util.Random r = new java.util.Random();
+		for (int i = 0 ; i < 19000  ; i++)
+		{
+			//Thread.sleep(50);
+			Color col = Color.decode(Integer.toString(r.nextInt(16777215)));
+			g.updateTerritory(r.nextInt(49), col, r.nextInt(8)+1);
+		}
+		
+		g.showAttack(19,20);
+		
+		int me = r.nextInt(6);
+		
+		while (true)
+		{
+			for (int i = 0 ; i < 6 ; i++)
+			{
+				g.showPlayerTurn(i);
+				g.showGamePlayable(i == me);
+				Thread.sleep(1000);
+			}
+		}
+	
 	}
 	
 	
