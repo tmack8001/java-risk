@@ -27,28 +27,28 @@ public class ServerProxy implements UIListener {
 		}
 	}
 	
-	public void endTurn() {
+	public void endTurn() throws IOException {
 		output.writeByte(Constants.END_TURN);
 	}
 	
-	public void startAttack(int territory) {
+	public void startAttack(int territory) throws IOException{
 		// check with local model to see what to do?
 	}
 	
-	public void launchAttack(int src, int dest) {
+	public void launchAttack(int src, int dest) throws IOException{
 		output.writeByte(Constants.ATTACK);
 		output.writeInt(src);
 		output.writeInt(dest);
 	}
 	
-	public void surrender() {
+	public void surrender() throws IOException{
 		output.writeByte(Constants.SURRENDER);
 	}
 	
 	public void turnIndicator(int player)
 	{
 		gui.showPlayerTurn(player);
-		boolean b = (player == me);
+		boolean b = true;//(player == me);
 		gui.showGamePlayable(b);
 	}
 	
