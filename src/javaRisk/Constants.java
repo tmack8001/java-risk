@@ -12,6 +12,16 @@ public final class Constants {
 	 */
 	public static final int PORT = 1988;
 	
+	/**
+	 * ROW_SIZE -- constant number of rows in a risk game
+	 */
+	public static final int ROW_SIZE = 7;
+	
+	/**
+	 * COL_SIZE -- constant number of columns in a risk game
+	 */
+	public static final int COL_SIZE = 7;
+	
 	// OPCODES
 	
 	/**
@@ -53,14 +63,4 @@ public final class Constants {
 	 * TERRITORY_STATUS -- args: index, new_owner, army_size
 	 */
 	public static final byte TERRITORY_STATUS = 8;
-	
-	/**
-	 * ROW_SIZE -- args: rows
-	 */
-	public static final int ROW_SIZE = 7;
-	
-	/**
-	 * COL_SIZE -- args: cols
-	 */
-	public static final int COL_SIZE = 7;
 }
