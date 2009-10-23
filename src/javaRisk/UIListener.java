@@ -6,10 +6,10 @@ public interface UIListener {
 
 	public void endTurn() throws IOException ;
 	
-	public void startAttack(int territory) throws IOException;
-	
 	public void launchAttack(int src, int dest) throws IOException;
 	
 	public void surrender() throws IOException;
+
+	public void clicked(int territory) throws IOException;
 	
 }
