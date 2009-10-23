@@ -26,6 +26,14 @@ public class ServerModel {
 	/*TODO: figure out an algorithm for number of armies per player*/
 	private static final int NUM_ARMY = 40;
 	
+	public ServerModel() {
+		territories = new ArrayList<Territory>();
+		players = new ArrayList<Player>();
+		rows = Constants.ROW_SIZE;
+		cols = Constants.COL_SIZE;
+		readyCount = 0;
+	}
+	
 	public ServerModel(List<Player> players, int rows, int cols) {
 		territories = new ArrayList<Territory>();
 		this.players = players;
@@ -46,11 +54,12 @@ public class ServerModel {
 	}
 	
 	public void placeArmies() {
+		Random generator = new Random();
 		int terrPerPlayer = (int) (territories.size() / players.size());
 		for(int i=0; i<territories.size(); i++) {
 			boolean assigned = false;
 			while(!assigned) {
-				Player player = players.get( (int)(Math.random() * players.size()) );
+				Player player = players.get( generator.nextInt(players.size()) );
 				if( player.getTerritories().size() < terrPerPlayer) {
 					int armySize = randomArmySize(player);
 					territories.get(i).setArmy(new Army(player, armySize));
@@ -61,7 +70,8 @@ public class ServerModel {
 	}
 	
 	private int randomArmySize( Player player ) {
-		return (int)(Math.random() * 7 + 1);
+		Random generator = new Random();
+		return (generator.nextInt(7) + 1);
 	}
 	
 	public void updateTerritory(int index, int owner, int size) {
