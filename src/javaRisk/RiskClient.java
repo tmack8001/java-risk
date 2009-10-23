@@ -22,20 +22,18 @@ public class RiskClient {
 	 * @param args	command line arguments
 	 */
 	public static void main(String[] args) {
-		if( args.length < 2 || args.length > 3 ) usage();
+		if( args.length > 1 ) usage();
 		
-		String host = args[0];
-		int port = Integer.parseInt( args[1] );
 		String playerName = "";
-		if( args.length == 3) {
-			playerName = args[2];
+		if( args.length == 1) {
+			playerName = args[0];
 		}
 		
 		Socket socket = new Socket();
 		try {
-			socket.connect( new InetSocketAddress( host, port ));
+			socket.connect( new InetSocketAddress( Constants.HOST, Constants.PORT ));
 		} catch (IOException e) {
-			System.err.println("Couldn't connect to server:port, " + host + ":" + port);
+			System.err.println("Couldn't connect to server:port, " + Constants.HOST + ":" + Constants.PORT);
 			System.exit(1);
 		}
 		
@@ -51,7 +49,7 @@ public class RiskClient {
 	 * Prints a usage message and exits program.
 	 */
 	private static void usage() {
-		System.err.println("Usage: java RiskClient <host> <port> [playerName]");
+		System.err.println("Usage: java RiskClient [playerName]");
 		System.exit(1);
 	}
 
