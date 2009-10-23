@@ -49,4 +49,13 @@ public final class Constants {
 	 */
 	public static final byte TERRITORY_STATUS = 8;
 	
+	/**
+	 * ROW_SIZE -- args: rows
+	 */
+	public static final int ROW_SIZE = 7;
+	
+	/**
+	 * COL_SIZE -- args: cols
+	 */
+	public static final int COL_SIZE = 7;
 }
