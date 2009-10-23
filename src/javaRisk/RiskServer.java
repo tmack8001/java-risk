@@ -1,6 +1,7 @@
 package javaRisk;
 import java.awt.Color;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -21,30 +22,28 @@ public class RiskServer {
 	 */
 	public static void main(String[] args) {
 		try {
-			ServerSocket ss = new ServerSocket(Constants.PORT);
+			ServerSocket ss = new ServerSocket();
+			ss.bind( new InetSocketAddress(Constants.HOST, Constants.PORT) );
 			System.out.println("Server waiting on port " + ss.getLocalPort());
-			ServerModel model = new ServerModel();
-			int index = 0;
-			Color c = Color.red;
-			String name = "bob";
-			while (acceptingClients) {
-				Socket sock = ss.accept();
-				System.out.println("Connect: " + sock.getRemoteSocketAddress().toString());
-				ClientProxy cp = new ClientProxy(sock);
-				cp.setModel(model);
-				cp.start();
-				
-				model.addPlayer(new Player(index++, name, c ));
-				
-			}
 			
-		} catch (IOException e)
-		{
+			ServerModel model = new ServerModel();
+			for(;;) {
+				while (acceptingClients) {
+					Socket socket = ss.accept();
+					System.out.println("Connect: " + socket.getRemoteSocketAddress().toString());
+					
+					ClientProxy proxy = new ClientProxy( socket );
+					model.addListener( proxy );
+					proxy.setModel(model);
+					proxy.start();
+				}
+				if( model.getWinner() != null ) {
+					acceptingClients = true;
+				}
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 
 	/**
