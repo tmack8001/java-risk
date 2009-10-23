@@ -13,6 +13,11 @@ public final class Constants {
 	public static final int PORT = 1988;
 	
 	/**
+	 * BOARD_SIZE
+	 */
+	public static final int BOARD_SIZE = 7;
+	
+	/**
 	 * ROW_SIZE -- constant number of rows in a risk game
 	 */
 	public static final int ROW_SIZE = 7;
@@ -37,7 +42,7 @@ public final class Constants {
 	/**
 	 * SURRENDER
 	 */
-	public static final byte SURRENDER = 13;
+	public static final byte SURRENDER = 3;
 	
 	/**
 	 * END_TURN
@@ -45,7 +50,7 @@ public final class Constants {
 	public static final byte END_TURN = 4;
 	
 	/**
-	 * GAME_STARTING
+	 * GAME_STARTING -- args: number_of_players
 	 */
 	public static final byte GAME_STARTING = 5;
 	
@@ -55,12 +60,23 @@ public final class Constants {
 	public static final byte TURN_IND = 6;
 	
 	/**
-	 * ATTACK_MADE -- args: src-territory, dest-territory, attacker_roll, defender_roll
+	 * ATTACK_MADE -- args: src-territory, dest-territory, attacker-roll, defender-roll
 	 */
 	public static final byte ATTACK_MADE = 7;
 	
 	/**
-	 * TERRITORY_STATUS -- args: index, new_owner, army_size
+	 * TERRITORY_STATUS -- args: index, owner, army_size
 	 */
 	public static final byte TERRITORY_STATUS = 8;
+	
+	/**
+	 * PLAYER_INFO -- args: player-num, color(int), player-name
+	 */
+	public static final byte PLAYER_INFO = 9;
+	
+	/**
+	 * WHO_AM_I -- args: player-num
+	 */
+	public static final byte WHO_AM_I = 10;
+	
 }
