@@ -19,6 +19,10 @@ public class Player {
 	private boolean alive;
 	private Color color;
 	private HashMap<Integer, Territory> territories;
+	private boolean ready;
+	
+	public Player() {
+	}
 	
 	/** Create a new Player with the given name.
 	 * 
@@ -30,6 +34,7 @@ public class Player {
 		this.color = color;
 		territories = new HashMap<Integer, Territory>();
 		alive = true;
+		ready = false;
 	}
 	
 	/** This allows a player to surrender at any point in the game.
@@ -107,6 +112,14 @@ public class Player {
 	 */
 	public void setAlive(boolean alive) {
 		this.alive = alive;
+	}
+	
+	public boolean getReady() {
+		return ready;
+	}
+	
+	public void setReady(boolean ready) {
+		this.ready = ready;
 	}
 
 	public Territory getTerritory(int index) {
