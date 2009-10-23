@@ -1,5 +1,8 @@
+/**
+ * RiskServer.java
+ */
 package javaRisk;
-import java.awt.Color;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -22,8 +25,8 @@ public class RiskServer {
 	 */
 	public static void main(String[] args) {
 		try {
-			ServerSocket ss = new ServerSocket();
-			ss.bind( new InetSocketAddress(Constants.HOST, Constants.PORT) );
+			ServerSocket ss = new ServerSocket(Constants.PORT);
+			//ss.bind( new InetSocketAddress(Constants.HOST, Constants.PORT) );
 			System.out.println("Server waiting on port " + ss.getLocalPort());
 			
 			ServerModel model = new ServerModel();
@@ -36,6 +39,9 @@ public class RiskServer {
 					model.addListener( proxy );
 					proxy.setModel(model);
 					proxy.start();
+					
+					model.initializeBoard();
+					model.placeArmies();
 				}
 				if( model.getWinner() != null ) {
 					acceptingClients = true;

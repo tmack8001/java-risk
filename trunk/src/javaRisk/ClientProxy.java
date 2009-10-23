@@ -1,6 +1,7 @@
 package javaRisk;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -39,12 +40,55 @@ public class ClientProxy {
 		model.attack(src, dest);
 	}
 	
+	/**
+	 * Attaches the attack results onto the socket to send over to the client.
+	 * 
+	 * @param attackResult	[0] - attacking territory index
+	 * 						[1] - defending territory index
+	 * 						[2] - attack roll
+	 * 						[3] - defend roll
+	 */
+	public void attackMade(int[] attackResult) throws IOException {
+		output.writeByte(Constants.ATTACK_MADE);
+		output.writeInt(attackResult[0]);
+		output.writeInt(attackResult[1]);
+		output.writeInt(attackResult[2]);
+		output.writeInt(attackResult[3]);
+		output.flush();
+	}
+	
+	/**
+	 * 
+	 * @param territoryStatus
+	 * @throws IOException
+	 */
+	public void updateTerritory(int[] territoryStatus) throws IOException {
+		System.out.println("updateTerritory");
+		output.writeByte(Constants.TERRITORY_STATUS);
+		output.writeInt(territoryStatus[0]);
+		output.writeInt(territoryStatus[1]);
+		output.writeInt(territoryStatus[2]);
+		output.flush();
+	}
+	
+	/**
+	 * 
+	 * @param currentTurn
+	 * @throws IOException
+	 */
+	public void sendTurn(int currentTurn) throws IOException {
+		System.out.println("currentTurn is " + currentTurn);
+		output.writeByte(Constants.TURN_IND);
+		output.writeInt(currentTurn);
+		output.flush();
+	}
+	
 	public void signalEndTurn() {
-		model.endTurn(me);
+		model.incrementMove();
 	}
 	
 	public void surrender() {
-		model.surrender(me);
+		model.removeListener(this);
 	}
 	
 	public void signalReady() {
@@ -59,15 +103,11 @@ public class ClientProxy {
 	private class Reader extends Thread {
 
 		public void run() {
-			try
-			{
-				while(true)
-				{
-
+			try {
+				while(true)	{
 					byte curr = input.readByte();
 
-					switch(curr)
-					{
+					switch(curr){
 					case Constants.ATTACK:
 						int src = input.readInt();
 						int dest = input.readInt();
@@ -86,16 +126,18 @@ public class ClientProxy {
 					default:
 						break;
 					}
-
 				}
-			} catch (IOException e)
-			{
-				e.printStackTrace();
+			} catch(EOFException exc) {
+			} catch(IOException exc) {
+				System.err.println("ClientProxy.Reader.run(): I/O error");
+				exc.printStackTrace();
+			} finally { 
+				try {
+					surrender();
+					socket.close();
+				}catch(IOException exc) {
+				}
 			}
 		}
-
-
 	}
-	
 }
-

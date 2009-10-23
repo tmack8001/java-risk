@@ -114,6 +114,10 @@ public class Player {
 		this.alive = alive;
 	}
 	
+	public int getIndex() {
+		return index;
+	}
+	
 	public boolean getReady() {
 		return ready;
 	}

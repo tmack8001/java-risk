@@ -46,7 +46,7 @@ public class Army {
 		int totalRoll = 0;
 		for(int i=0; i<armyCount; i++) {
 			Random generator = new Random();
-			int diceRoll = generator.nextInt(5)+1;
+			int diceRoll = generator.nextInt(6)+1;
 			totalRoll += diceRoll;
 		}
 		return totalRoll;

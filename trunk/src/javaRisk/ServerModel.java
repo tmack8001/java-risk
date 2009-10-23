@@ -4,7 +4,9 @@
 package javaRisk;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +21,10 @@ public class ServerModel {
 	
 	private List<Territory> territories;
 	private List<Player> players;
+	
+	private HashMap<ClientProxy, Player> listeners;
+	private Random rand = new Random();
+	
 	private int currentMove;
 	private int rows, cols;
 	private int readyCount;
@@ -27,42 +33,62 @@ public class ServerModel {
 	private static final int NUM_ARMY = 40;
 	
 	public ServerModel() {
-		territories = new ArrayList<Territory>();
-		players = new ArrayList<Player>();
-		rows = Constants.ROW_SIZE;
-		cols = Constants.COL_SIZE;
-		readyCount = 0;
+		this(new ArrayList<Player>(), Constants.ROW_SIZE, Constants.COL_SIZE);
 	}
 	
 	public ServerModel(List<Player> players, int rows, int cols) {
 		territories = new ArrayList<Territory>();
+		listeners = new HashMap<ClientProxy, Player>();
 		this.players = players;
 		this.rows = rows;
 		this.cols = cols;
 		readyCount = 0;
 	}
 	
+	public synchronized void addListener(ClientProxy client) {
+		Player player = new Player(players.size(), "Player " + players.size(), 
+				Color.getHSBColor(rand.nextFloat(), 1.0f, 1.0f));
+		players.add(player);
+		listeners.put(client, player);
+	}
+	
+	public synchronized void addListener(ClientProxy client, String name) {
+		Player player = new Player(players.size(), name, 
+				Color.getHSBColor(rand.nextFloat(), 1.0f, 1.0f));
+		players.add(player);
+		listeners.put(client, player);
+	}
+	
+	public synchronized void removeListener(ClientProxy client) {
+		Player player = listeners.remove(client);
+		player.surrender();
+		players.remove(player);
+	}
+	
 	public void initializeBoard() {
+		System.out.println("setup board");
 		int index = 0;
 		for(int row=0; row<rows; row++) {
 			for(int col=0; col<cols; col++) {
 				territories.add(new Territory(index++, row, col));
 			}
 		}
-		
-		setCurrentMove(0);
+		setCurrentMove(-1);
+		incrementMove();
 	}
 	
 	public void placeArmies() {
-		Random generator = new Random();
+		System.out.println("placearmies");
 		int terrPerPlayer = (int) (territories.size() / players.size());
 		for(int i=0; i<territories.size(); i++) {
 			boolean assigned = false;
 			while(!assigned) {
-				Player player = players.get( generator.nextInt(players.size()) );
+				Player player = players.get( rand.nextInt(players.size()) );
 				if( player.getTerritories().size() < terrPerPlayer) {
 					int armySize = randomArmySize(player);
-					territories.get(i).setArmy(new Army(player, armySize));
+					Territory t = territories.get(i);
+					t.setArmy(new Army(player, armySize));
+					updateTerritory(t.getIndex(), t);
 					assigned = true;
 				}
 			}
@@ -70,13 +96,52 @@ public class ServerModel {
 	}
 	
 	private int randomArmySize( Player player ) {
-		Random generator = new Random();
-		return (generator.nextInt(7) + 1);
+		return (rand.nextInt(7) + 1);
 	}
 	
-	public void updateTerritory(int index, int owner, int size) {
-		Territory territory = territories.get( index );
-		territory.setArmy( new Army(players.get(owner), size) );
+	public synchronized void attack(int attacker, int defender) {
+		System.out.println("src: " + attacker + " dest: " + defender);
+		Territory attacking = territories.get(attacker);
+		Territory defending = territories.get(defender);
+		
+		/* [1] - attacking Index
+		 * [2] - defending Index
+		 * [3] - attack Roll
+		 * [4] - defend Roll
+		 */
+		int[] attackResults = attacking.attack(defending);
+		
+		if( attackResults != null ) {
+			Iterator<ClientProxy> iterator = listeners.keySet().iterator();
+			while(iterator.hasNext()) {
+				try {
+					iterator.next().attackMade(attackResults);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			updateTerritory(attackResults[0], attacking);
+			updateTerritory(attackResults[1], defending);
+		}
+	}
+	
+	public void updateTerritory(int index, Territory newTerritory) {
+		territories.set(index, newTerritory);
+		
+		int[] territoryStatus = new int[3];
+		territoryStatus[0] = newTerritory.getIndex();
+		territoryStatus[1] = newTerritory.getOwner().getIndex();
+		territoryStatus[2] = newTerritory.getArmy().getCount();
+		
+		Iterator<ClientProxy> iterator = listeners.keySet().iterator();
+		while(iterator.hasNext()) {
+			try {
+				iterator.next().updateTerritory(territoryStatus);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public Player getWinner() {
@@ -93,16 +158,6 @@ public class ServerModel {
 		return winner;
 	}
 	
-	public void addPlayer(Player p) {
-		players.add(p);
-	}
-	
-	public void surrender(Player player) {
-		player.surrender();
-		players.remove(player);
-		//what happens to player's territories?
-	}
-	
 	public void ready(Player player) {
 		player.setReady(true);
 		readyCount++;
@@ -117,12 +172,23 @@ public class ServerModel {
 	}
 	
 	public void incrementMove() {
-		if(++currentMove >= players.size())
+		if(++currentMove >= players.size()) {
+			// fortify armies
 			currentMove = 0;
+		}
+		
+		Iterator<ClientProxy> iterator = listeners.keySet().iterator();
+		while(iterator.hasNext()) {
+			try {
+				iterator.next().sendTurn(currentMove);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static void main(String[] args) {
-		ArrayList<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<Player>();
 		players.add(new Player(0, "player 1", Color.RED));
 		players.add(new Player(1, "player 2", Color.BLUE));
 		ServerModel gb = new ServerModel(players,4,4);
@@ -130,6 +196,7 @@ public class ServerModel {
 		gb.initializeBoard();
 		gb.placeArmies();
 		gb.setCurrentMove(0);
+		
 		while(gb.getWinner() == null) {
 			Player attacker = players.get(gb.getCurrentMove());
 			gb.incrementMove();
