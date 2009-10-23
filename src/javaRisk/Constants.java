@@ -3,6 +3,11 @@ package javaRisk;
 public final class Constants {
 
 	/**
+	 * HOST
+	 */
+	public static final String HOST = "localhost";
+	
+	/**
 	 * PORT
 	 */
 	public static final int PORT = 1988;
