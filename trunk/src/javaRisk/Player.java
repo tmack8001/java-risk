@@ -38,14 +38,6 @@ public class Player {
 		alive = false;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isAlive() {
-		return alive && getTerritories().size() > 0;
-	}
-	
 	public int getTotalArmies() {
 		int totalArmies = 0;
 		Iterator<Integer> iterator = getTerritories().keySet().iterator();
@@ -53,13 +45,6 @@ public class Player {
 			totalArmies += territories.get(iterator.next()).getArmy().getCount();
 		}
 		return totalArmies;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
 	}
 
 	/**
@@ -81,6 +66,49 @@ public class Player {
 		return false;
 	}
 	
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+		return color;
+	}
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean getAlive() {
+		return alive && getTerritories().size() > 0;
+	}
+	
+	/**
+	 * @param alive the alive to set
+	 */
+	public void setAlive(boolean alive) {
+		this.alive = alive;
+	}
+
 	public Territory getTerritory(int index) {
 		return territories.get(new Integer(index));
 	}
