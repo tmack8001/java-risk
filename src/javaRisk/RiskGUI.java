@@ -17,7 +17,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-public class GUI extends JFrame {
+public class RiskGUI extends JFrame {
 
 	private UIListener listener;
 	
@@ -28,7 +28,7 @@ public class GUI extends JFrame {
 	private JLabel[] gridTiles;
 	private JLabel[] playerTitles;
 
-	public GUI()
+	public RiskGUI()
 	{
 		super("Risk");
 		this.setLayout(new BorderLayout());
@@ -146,7 +146,7 @@ public class GUI extends JFrame {
 	{
 		//TESTING THE GUI
 		
-		GUI g = new GUI();
+		RiskGUI g = new RiskGUI();
 		g.setVisible(true);
 		java.util.Random r = new java.util.Random();
 		for (int i = 0 ; i < 19000  ; i++)
