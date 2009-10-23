@@ -10,7 +10,7 @@ import java.net.Socket;
  */
 public class ServerProxy implements UIListener {
 
-	private GUI gui;
+	private RiskGUI gui;
 	private ClientModel model;
 	
 	private Socket socket;
@@ -113,10 +113,6 @@ public class ServerProxy implements UIListener {
 			{
 				e.printStackTrace();
 			}
-
 		}
-
-
 	}
-	
 }
