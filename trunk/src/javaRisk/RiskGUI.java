@@ -7,14 +7,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 public class RiskGUI extends JFrame {
@@ -25,24 +27,50 @@ public class RiskGUI extends JFrame {
 	private JLabel attackRoll = new JLabel();
 	private JLabel defendRoll = new JLabel();
 	
+	private boolean myTurn = false;
+	
 	private JLabel[] gridTiles;
 	private JLabel[] playerTitles;
+	
+	private String[] names;
 
-	public RiskGUI()
+	public RiskGUI(String[] playerNames)
 	{
 		super("Risk");
 		this.setLayout(new BorderLayout());
-		  
-		JPanel mainGrid = new JPanel(new GridLayout(7,7));
+	
+		
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				try {
+					listener.surrender();
+				} catch (IOException ex) {}
+			}
+		});
+		
+		names = playerNames;
+		
+		JPanel mainGrid = new JPanel(new GridLayout(Constants.BOARD_SIZE,Constants.BOARD_SIZE));
 		gridTiles = new JLabel[49];
-		for (int i = 0 ; i < 49 ; i++)
+		for (int i = 0 ; i < Constants.BOARD_SIZE*Constants.BOARD_SIZE ; i++)
 		{
+			
 			gridTiles[i] = new JLabel(Integer.toString(i+1), JLabel.CENTER);
 			gridTiles[i].setOpaque(true);
+			//gridTiles[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
+			
+			final int internal_i = i;
 			gridTiles[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					// TODO Auto-generated method stub
-					super.mouseClicked(e);
+					if (isPlayable())
+					{
+						try {
+							listener.clicked(internal_i);	
+						} catch (IOException ex) {
+							// TODO Auto-generated catch block
+							// do nothing i don't care
+						}
+					}
 				}
 			});
 			
@@ -62,12 +90,12 @@ public class RiskGUI extends JFrame {
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(1,0));
 		
-		playerTitles = new JLabel[6];
+		playerTitles = new JLabel[names.length];
 		
 		for (int i = 0 ; i < playerTitles.length ; i++)
 		{
 		
-			playerTitles[i] = new JLabel("Player " + (i+1));
+			playerTitles[i] = new JLabel(names[i]);
 			buttonPanel.add(playerTitles[i]);
 			
 		}
@@ -97,11 +125,15 @@ public class RiskGUI extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
+	public boolean isPlayable()
+	{
+		return myTurn;
+	}
+	
 	public void showPlayerTurn(int player) {
-		for (int i = 0; i < playerTitles.length ; i++)
+		for (int i = 0 ; i < playerTitles.length ; i++)
 		{
-			JLabel j = playerTitles[i];
-			j.setText("Player " + (i+1));
+			playerTitles[i].setText(names[i]);
 		}
 		playerTitles[player].setText(">> " + playerTitles[player].getText() + " <<");
 		
@@ -109,6 +141,7 @@ public class RiskGUI extends JFrame {
 
 	public void showGamePlayable(boolean b) {
 		endTurn.setEnabled(b);
+		myTurn = b;
 		
 	}
 
@@ -126,6 +159,15 @@ public class RiskGUI extends JFrame {
 		defendRoll.setText(Integer.toString(d_roll));	
 	}
 	
+	public void reset()
+	{
+		clearRolls();
+		for (JLabel gridItem : gridTiles)
+		{
+			gridItem.setBorder(null);
+		}
+	}
+	
 	public void clearRolls() {
 		attackRoll.setText("");
 		defendRoll.setText("");
@@ -134,7 +176,10 @@ public class RiskGUI extends JFrame {
 	public void updateTerritory(int index, Color color, int size) {
 		gridTiles[index].setBackground(color);
 		gridTiles[index].setText(Integer.toString(size));
-		
+	}
+	
+	public void highlight(int territory){
+		gridTiles[territory].setBorder(new BevelBorder(BevelBorder.RAISED));
 	}
 
 	public void setListener(UIListener listener)
@@ -142,33 +187,37 @@ public class RiskGUI extends JFrame {
 		this.listener = listener;
 	}
 	
-	public static void main(String args[]) throws InterruptedException
+	public static void main(String args[]) throws Exception
 	{
 		//TESTING THE GUI
+		Socket s = new Socket("129.21.141.104", 1988);
 		
-		RiskGUI g = new RiskGUI();
+		RiskGUI g = new RiskGUI(new String[]{"Joe","Bob","Tom","Al","Mike","Dan"});
+		
+		ServerProxy sp = new ServerProxy(s);
+		
+		g.setListener(sp);
+		sp.setGUI(g);
 		g.setVisible(true);
 		java.util.Random r = new java.util.Random();
-		for (int i = 0 ; i < 19000  ; i++)
+		
+		ClientModel m = new ClientModel(6);
+		sp.setModel(m);
+		
+		m.setMe(0);
+		
+		
+		for (int i = 0 ; i < 6 ; i++)
 		{
-			//Thread.sleep(50);
-			Color col = Color.decode(Integer.toString(r.nextInt(16777215)));
-			g.updateTerritory(r.nextInt(49), col, r.nextInt(8)+1);
+			Color col = Color.getHSBColor(r.nextFloat(), 1.0f, 1.0f);
+			m.fillPlayerData(i, col, "Player " + i);
 		}
 		
-		g.showAttack(19,20);
+		sp.start();
+
 		
-		int me = r.nextInt(6);
 		
-		while (true)
-		{
-			for (int i = 0 ; i < 6 ; i++)
-			{
-				g.showPlayerTurn(i);
-				g.showGamePlayable(i == me);
-				Thread.sleep(1000);
-			}
-		}
+		
 	
 	}
 	
