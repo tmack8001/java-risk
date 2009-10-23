@@ -40,13 +40,19 @@ public class Territory {
 	 * @param territory
 	 * @return
 	 */
-	public boolean attack(Territory territory) {
+	public int[] attack(Territory territory) {
 		if(!getOwner().equals(territory.getOwner()) && getArmy().getCount() > 1 && isAdjacent(territory)) {
 			Army defendingArmy = territory.getArmy();
 			Army attackingArmy = getArmy();
-			
 			int attackingRoll = attackingArmy.getRoll( ATTACK );
 			int defendingRoll = defendingArmy.getRoll( DEFEND );
+			
+			int[] attackResults = new int[3];
+			attackResults[0] = this.getIndex();
+			attackResults[1] = territory.getIndex();
+			attackResults[2] = attackingRoll;
+			attackResults[3] = defendingRoll;
+			
 			System.out.println(getIndex()+" attack ["+attackingArmy.getCount()+"]: "+attackingRoll);
 			System.out.println(territory.getIndex()+" defend ["+defendingArmy.getCount()+"]: "+defendingRoll);
 			if(attackingRoll > defendingRoll) {
@@ -57,9 +63,9 @@ public class Territory {
 			}else {
 				attackingArmy.setCount( MINIMUM_ARMY );
 			}
-			return true;
+			return attackResults;
 		}
-		return false;
+		return null;
 	}
 	
 	/**
