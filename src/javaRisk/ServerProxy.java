@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * The ServerProxy is the interface between the Risk game UI
@@ -19,6 +18,8 @@ public class ServerProxy implements UIListener {
 	private Socket socket;
 	private DataInputStream input;
 	private DataOutputStream output;
+	
+	private boolean gameStarted = false;
 	
 	public ServerProxy(Socket socket) {
 		this.socket = socket;
@@ -52,6 +53,7 @@ public class ServerProxy implements UIListener {
 	
 	public void endTurn() throws IOException {
 		output.writeByte(Constants.END_TURN);
+		gui.reset();
 	}
 	
 	public void launchAttack(int src, int dest) throws IOException{
@@ -88,9 +90,27 @@ public class ServerProxy implements UIListener {
 		this.gui = gui;
 	}
 	
+	public void joinGame(String gameName) throws IOException
+	{
+		output.writeByte(Constants.GAME_TO_JOIN);
+		output.writeUTF(gameName);
+		output.flush();
+	}
+	
+	public void ready() throws IOException
+	{
+		output.writeByte(Constants.READY);
+		output.flush();
+	}
+	
 	public void setModel(ClientModel model)
 	{
 		this.model = model;
+	}
+	
+	public String[] getPlayerNames()
+	{
+		return model.getPlayerNames();
 	}
 	
 	public ClientModel getModel() {
@@ -106,7 +126,7 @@ public class ServerProxy implements UIListener {
 		public void run() {
 			try
 			{
-				while(true)
+				while(socket.isConnected())
 				{
 					byte curr = input.readByte();
 					
@@ -118,6 +138,7 @@ public class ServerProxy implements UIListener {
 						int numPlayers = input.readInt();
 						
 						model = new ClientModel(numPlayers);
+						gameStarted = true;
 						
 						break;
 					case Constants.TURN_IND:
@@ -173,6 +194,10 @@ public class ServerProxy implements UIListener {
 		}
 
 
+	}
+
+	public boolean gameIsStarted() {
+		return gameStarted;
 	}
 	
 }
