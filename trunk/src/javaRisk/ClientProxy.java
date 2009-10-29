@@ -95,6 +95,14 @@ public class ClientProxy {
 		model.ready(me);
 	}
 	
+	public void joinGame(String name)
+	{
+		ServerModel model = SessionMap.getSession(name);
+		//TODO check if game already started
+		model.addListener(this);
+		this.setModel(model);
+	}
+	
 	public void start()
 	{
 		new Reader().start();
@@ -122,6 +130,10 @@ public class ClientProxy {
 						break;
 					case Constants.SURRENDER:
 						surrender();	
+						break;
+					case Constants.GAME_TO_JOIN:
+						String gameName = input.readUTF();
+						joinGame(gameName);
 						break;
 					default:
 						break;
