@@ -79,5 +79,15 @@ public class ClientModel {
 	public void updateTerritory(int index, int owner, int size) {
 		territories.get(index).setArmy(new Army(players.get(owner), size));
 	}
+	
+	public String[] getPlayerNames()
+	{
+		ArrayList<String> names = new ArrayList<String>();
+		for (Player p : players)
+		{
+			names.add(p.getName());
+		}
+		return (String[])names.toArray();
+	}
 
 }
