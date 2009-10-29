@@ -79,4 +79,9 @@ public final class Constants {
 	 */
 	public static final byte WHO_AM_I = 10;
 	
+	/**
+	 * GAME_TO_JOIN -- args: game-name
+	 */
+	public static final byte GAME_TO_JOIN = 11;
+	
 }
