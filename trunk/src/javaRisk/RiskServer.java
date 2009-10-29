@@ -29,23 +29,21 @@ public class RiskServer {
 			//ss.bind( new InetSocketAddress(Constants.HOST, Constants.PORT) );
 			System.out.println("Server waiting on port " + ss.getLocalPort());
 			
-			ServerModel model = new ServerModel();
 			for(;;) {
 				while (acceptingClients) {
 					Socket socket = ss.accept();
 					System.out.println("Connect: " + socket.getRemoteSocketAddress().toString());
 					
 					ClientProxy proxy = new ClientProxy( socket );
-					model.addListener( proxy );
-					proxy.setModel(model);
-					proxy.start();
 					
-					model.initializeBoard();
-					model.placeArmies();
+					proxy.start();
+					//where do we put these?
+					//model.initializeBoard();
+					//model.placeArmies();
 				}
-				if( model.getWinner() != null ) {
-					acceptingClients = true;
-				}
+//				if( model.getWinner() != null ) {
+//					acceptingClients = true;
+//				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
