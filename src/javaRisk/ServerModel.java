@@ -48,6 +48,7 @@ public class ServerModel {
 	public synchronized void addListener(ClientProxy client) {
 		Player player = new Player(players.size(), "Player " + players.size(), 
 				Color.getHSBColor(rand.nextFloat(), 1.0f, 1.0f));
+		client.setPlayer(player);
 		players.add(player);
 		listeners.put(client, player);
 	}
@@ -73,8 +74,7 @@ public class ServerModel {
 				territories.add(new Territory(index++, row, col));
 			}
 		}
-		setCurrentMove(-1);
-		incrementMove();
+		currentMove = 0;
 	}
 	
 	public void placeArmies() {
@@ -144,6 +144,38 @@ public class ServerModel {
 		}
 	}
 	
+	public void playerInfo() {
+		Iterator<ClientProxy> iterator = listeners.keySet().iterator();
+		while(iterator.hasNext()) {
+			try {
+				ClientProxy proxy = iterator.next();
+				for (Player player : players) {
+					proxy.playerInfo(player);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public boolean gameStarting() {
+		if(readyCount == players.size()) {
+			initializeBoard();
+			placeArmies();
+			
+			Iterator<ClientProxy> iterator = listeners.keySet().iterator();
+			while(iterator.hasNext()) {
+				try {
+					iterator.next().gameStarting(players.size());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	public Player getWinner() {
 		Iterator<Player> iterator = players.iterator();
 		int numAlive = 0;
@@ -161,6 +193,11 @@ public class ServerModel {
 	public void ready(Player player) {
 		player.setReady(true);
 		readyCount++;
+		
+		if(readyCount == players.size() && players.size() > 1) {
+			playerInfo();
+			gameStarting();
+		}
 	}
 	
 	public int getCurrentMove() {
@@ -187,7 +224,12 @@ public class ServerModel {
 		}
 	}
 	
+	public void setPlayer(int index, Player player) {
+		players.set(index, player);
+	}
+	
 	public static void main(String[] args) {
+		/* Used for Testing */
 		List<Player> players = new ArrayList<Player>();
 		players.add(new Player(0, "player 1", Color.RED));
 		players.add(new Player(1, "player 2", Color.BLUE));

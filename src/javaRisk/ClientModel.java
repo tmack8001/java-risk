@@ -2,6 +2,7 @@ package javaRisk;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 
 import java.util.HashMap;
 
@@ -83,6 +84,7 @@ public class ClientModel {
 	public String[] getPlayerNames()
 	{
 		ArrayList<String> names = new ArrayList<String>();
+		names.add("Players 1");
 		for (Player p : players)
 		{
 			names.add(p.getName());
@@ -90,4 +92,9 @@ public class ClientModel {
 		return (String[])names.toArray();
 	}
 
+	public void setPlayers(List<Player> players2) {
+		for (Player player : players2) {
+			players.set(player.getIndex(), player);
+		}
+	}
 }

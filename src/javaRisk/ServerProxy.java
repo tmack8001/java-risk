@@ -1,10 +1,14 @@
 package javaRisk;
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The ServerProxy is the interface between the Risk game UI
@@ -14,6 +18,7 @@ public class ServerProxy implements UIListener {
 
 	private RiskGUI gui;
 	private ClientModel model;
+	private List<Player> players = new ArrayList<Player>();
 	
 	private Socket socket;
 	private DataInputStream input;
@@ -52,17 +57,20 @@ public class ServerProxy implements UIListener {
 	}
 	
 	public void endTurn() throws IOException {
+		System.out.println("I'm Done");
 		output.writeByte(Constants.END_TURN);
 		gui.reset();
 	}
 	
 	public void launchAttack(int src, int dest) throws IOException{
+		System.out.println(src + " attackes " + dest);
 		output.writeByte(Constants.ATTACK);
 		output.writeInt(src);
 		output.writeInt(dest);
 	}
 	
 	public void surrender() throws IOException{
+		System.out.println("Surrender Me");
 		output.writeByte(Constants.SURRENDER);
 		socket.close();
 	}
@@ -92,13 +100,27 @@ public class ServerProxy implements UIListener {
 	
 	public void joinGame(String gameName) throws IOException
 	{
+		System.out.println("Join game " + gameName);
 		output.writeByte(Constants.GAME_TO_JOIN);
 		output.writeUTF(gameName);
 		output.flush();
 	}
 	
+	public void playerInfo(String playerName) throws IOException
+	{
+		System.out.println("Send Player Name");
+		output.writeByte(Constants.PLAYER_INFO);
+		output.writeUTF(playerName);
+		output.flush();
+	}
+	
+	public void playerInfo(int player, Color color, String name) {
+		players.add(new Player(player, name, color));
+	}
+	
 	public void ready() throws IOException
 	{
+		System.out.println("Ready Me");
 		output.writeByte(Constants.READY);
 		output.flush();
 	}
@@ -130,23 +152,24 @@ public class ServerProxy implements UIListener {
 				{
 					byte curr = input.readByte();
 					
-				//	System.out.println("Received: " + curr);
-					
 					switch(curr)
 					{
 					case Constants.GAME_STARTING:
+						System.out.println("Game Starting");
 						int numPlayers = input.readInt();
-						
 						model = new ClientModel(numPlayers);
+						model.setPlayers(players);
 						gameStarted = true;
 						
 						break;
 					case Constants.TURN_IND:
+						System.out.println("Turn Ind");
 						int player_num = input.readInt();
 						turnIndicator(player_num);
 						break;
 						
 					case Constants.ATTACK_MADE:
+						System.out.println("Attack Made");
 						int src = input.readInt();
 						int dest = input.readInt();
 						int a_roll = input.readInt();
@@ -156,6 +179,7 @@ public class ServerProxy implements UIListener {
 						break;
 						
 					case Constants.TERRITORY_STATUS:
+						System.out.println("Territory Status");
 						int index = input.readInt();
 						int owner = input.readInt();
 						int size = input.readInt();
@@ -164,16 +188,17 @@ public class ServerProxy implements UIListener {
 						break;
 						
 					case Constants.PLAYER_INFO:
+						System.out.println("Player Info");
 						int player = input.readInt();
 						int rgb = input.readInt();
 						String name = input.readUTF();
-						
-						model.fillPlayerData(player, new Color(rgb), name);
+						playerInfo(player, new Color(rgb), name);
 						break;
 						
 					case Constants.WHO_AM_I:
+						System.out.println("Who am I?");
 						int me = input.readInt();
-						model.setMe(me);
+						ServerProxy.this.model.setMe(me);
 						
 					default:
 						break;
@@ -199,5 +224,4 @@ public class ServerProxy implements UIListener {
 	public boolean gameIsStarted() {
 		return gameStarted;
 	}
-	
 }

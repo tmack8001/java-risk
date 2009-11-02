@@ -1,4 +1,5 @@
 package javaRisk;
+import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -26,6 +27,7 @@ public class ClientProxy {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		me = new Player();
 	}
 	
 	public void setPlayer(Player player) {
@@ -34,10 +36,25 @@ public class ClientProxy {
 	
 	public void setModel(ServerModel model) {
 		this.model = model;
+		this.model.setPlayer(me.getIndex(), me);
 	}
 	
 	public void attackLaunched(int src, int dest) {
 		model.attack(src, dest);
+	}
+	
+	/**
+	 * 
+	 * @param currentTurn
+	 * @throws IOException
+	 */
+	public void playerInfo(Player player) throws IOException {
+		System.out.println("Sending player info " + player.getIndex());
+		output.writeByte(Constants.PLAYER_INFO);
+		output.writeInt(player.getIndex());
+		output.writeInt(player.getColor().getRGB());
+		output.writeUTF(player.getName());
+		output.flush();
 	}
 	
 	/**
@@ -83,12 +100,25 @@ public class ClientProxy {
 		output.flush();
 	}
 	
+	/**
+	 * 
+	 * @param currentTurn
+	 * @throws IOException
+	 */
+	public void gameStarting(int numPlayers) throws IOException {
+		System.out.println("Game starting with " + numPlayers + " players");
+		output.writeByte(Constants.GAME_STARTING);
+		output.writeInt(numPlayers);
+		output.flush();
+	}
+	
 	public void signalEndTurn() {
 		model.incrementMove();
 	}
 	
 	public void surrender() {
-		model.removeListener(this);
+		if(model != null)
+			model.removeListener(this);
 	}
 	
 	public void signalReady() {
@@ -114,7 +144,7 @@ public class ClientProxy {
 			try {
 				while(true)	{
 					byte curr = input.readByte();
-
+					
 					switch(curr){
 					case Constants.ATTACK:
 						int src = input.readInt();
@@ -127,6 +157,7 @@ public class ClientProxy {
 						break;
 					case Constants.READY:
 						signalReady();
+						System.out.println("player ready");
 						break;
 					case Constants.SURRENDER:
 						surrender();	
@@ -135,6 +166,11 @@ public class ClientProxy {
 						String gameName = input.readUTF();
 						joinGame(gameName);
 						break;
+					case Constants.PLAYER_INFO:
+						Player player = ClientProxy.this.me;
+						String playerName = input.readUTF();
+						player.setName(playerName);
+						break;	
 					default:
 						break;
 					}
