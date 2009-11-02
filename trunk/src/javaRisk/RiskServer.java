@@ -37,13 +37,7 @@ public class RiskServer {
 					ClientProxy proxy = new ClientProxy( socket );
 					
 					proxy.start();
-					//where do we put these?
-					//model.initializeBoard();
-					//model.placeArmies();
 				}
-//				if( model.getWinner() != null ) {
-//					acceptingClients = true;
-//				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
