@@ -70,7 +70,8 @@ public final class Constants {
 	public static final byte TERRITORY_STATUS = 8;
 	
 	/**
-	 * PLAYER_INFO -- args: player-num, color(int), player-name
+	 * PLAYER_INFO (to client)-- args: player-num, color(int), player-name
+	 * 			   (to server)-- args: player-name
 	 */
 	public static final byte PLAYER_INFO = 9;
 	

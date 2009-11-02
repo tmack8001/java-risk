@@ -24,7 +24,7 @@ public class RiskClient {
 	 * @param args	command line arguments
 	 */
 	public static void main(String[] args) {
-		if( args.length < 2) usage();
+		if( args.length < 2 || args.length > 3) usage();
 		
 		String hostName = args[0];
 		String gameName = args[1];
@@ -38,11 +38,11 @@ public class RiskClient {
 		try {
 			socket.connect( new InetSocketAddress( Constants.HOST, Constants.PORT ));
 		
-
 			ServerProxy proxy = new ServerProxy( socket );
 			proxy.start();
 
 			proxy.joinGame(gameName);
+			proxy.playerInfo(playerName);
 			
 			int result = -1;
 			
@@ -56,12 +56,13 @@ public class RiskClient {
 					System.exit(0);
 				}
 			}
-			proxy.ready(); //TODO fix this
+			proxy.ready();
 
+			//game never gets ready ... need to figure out why
 			while (!proxy.gameIsStarted()) {} // wait for game to be ready
 
-
-			RiskGUI gui = new RiskGUI( proxy.getPlayerNames()); 
+			String[] names = { "Johnny", "Billy" };
+			RiskGUI gui = new RiskGUI( names );//proxy.getPlayerNames()); 
 
 			//proxy.addPlayer(playerName);
 
