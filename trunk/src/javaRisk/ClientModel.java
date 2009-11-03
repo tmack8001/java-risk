@@ -79,7 +79,6 @@ public class ClientModel {
 	public String[] getPlayerNames()
 	{
 		ArrayList<String> names = new ArrayList<String>();
-		names.add("Players 1");
 		for (Player p : players)
 		{
 			names.add(p.getName());
