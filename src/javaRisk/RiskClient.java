@@ -89,10 +89,7 @@ public class RiskClient {
 		} catch (IOException e) {
 			System.err.println("Couldn't connect to server:port, " + Constants.HOST + ":" + Constants.PORT);
 			System.exit(1);
-		} finally
-		{
-			try {socket.close();} catch (IOException e) {}
-		}
+		} 
 		
 	}
 
