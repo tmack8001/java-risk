@@ -243,7 +243,6 @@ public class ServerModel {
 		System.out.println("fortify " + playerIndex);
 		Player player = players.get(playerIndex);
 		int numArmies = player.getNumTerritories() / 2;
-		if( numArmies <= 0 ) numArmies = 1;
 		while(numArmies > 0) {
 			Territory territory = player.getRandomTerritory();
 			Army army = territory.getArmy();
