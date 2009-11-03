@@ -91,4 +91,9 @@ public final class Constants {
 	 * GAME_STARTING -- args: player-num
 	 */
 	public static final byte GAME_FINISHED = 12;
+	
+	/**
+	 * GAME_ALREADY_STARTED
+	 */
+	public static final byte GAME_ALREADY_STARTED = 13;
 }
