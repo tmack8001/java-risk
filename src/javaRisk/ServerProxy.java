@@ -222,4 +222,8 @@ public class ServerProxy implements UIListener {
 	public boolean gameIsStarted() {
 		return gameStarted;
 	}
+
+	public Color requestPlayerColor(int player) {
+		return model.getPlayerColor(player);
+	}
 }

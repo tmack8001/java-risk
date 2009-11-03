@@ -1,5 +1,6 @@
 package javaRisk;
 
+import java.awt.Color;
 import java.io.IOException;
 
 public interface UIListener {
@@ -11,5 +12,7 @@ public interface UIListener {
 	public void surrender() throws IOException;
 
 	public void clicked(int territory) throws IOException;
+
+	public Color requestPlayerColor(int player);
 	
 }
