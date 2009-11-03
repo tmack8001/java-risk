@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  *
  */
 public class RiskClient {
-
+	
 	/**
 	 * Main program.
 	 * 
@@ -27,6 +27,7 @@ public class RiskClient {
 
 		String playerName = JOptionPane.showInputDialog("Enter your name:");
 		if (playerName == null)System.exit(0);
+		if (playerName.equals("")) playerName = "Risk Player";
 		
 		String hostName = JOptionPane.showInputDialog("Enter the address of the Risk Server:", "localhost");
 		if (hostName == null) System.exit(0);
@@ -45,7 +46,7 @@ public class RiskClient {
 			ClientModel model = new ClientModel();
 			
 			RiskGUI gui = new RiskGUI();
-			
+			gui.setTitle("Risk - " + playerName);
 			proxy.setGUI(gui);
 			
 			proxy.setModel(model);
