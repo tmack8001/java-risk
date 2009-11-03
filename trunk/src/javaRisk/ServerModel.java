@@ -214,16 +214,10 @@ public class ServerModel {
 	}
 	
 	public void incrementMove() {
-		if(++currentMove >= players.size()) {
-			currentMove = 0;
-		}
+		currentMove = (currentMove + 1) % players.size();
 		
 		while(players.get(currentMove).getNumTerritories() == 0) {
-			if(currentMove >= players.size()) {
-				currentMove = 0;
-			}else {
-				currentMove++;
-			}
+			currentMove = (currentMove + 1) % players.size();
 		}
 		
 		Iterator<ClientProxy> iterator = listeners.keySet().iterator();
