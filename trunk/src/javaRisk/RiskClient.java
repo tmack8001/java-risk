@@ -21,22 +21,23 @@ public class RiskClient {
 	/**
 	 * Main program.
 	 * 
-	 * @param args	command line arguments
+	 * @param args	command line arguments (ignored)
 	 */
-	public static void main(String[] args) throws InterruptedException {
-		if( args.length < 2 || args.length > 3) usage();
+	public static void main(String[] args) {
+
+		String playerName = JOptionPane.showInputDialog("Enter your name:");
+		if (playerName == null)System.exit(0);
 		
-		String hostName = args[0];
-		String gameName = args[1];
+		String hostName = JOptionPane.showInputDialog("Enter the address of the Risk Server:", "localhost");
+		if (hostName == null) System.exit(0);
 		
-		String playerName = "";
-		if( args.length == 3) {
-			playerName = args[2];
-		}
+		String gameName = JOptionPane.showInputDialog("Enter the room name:");
+		if (gameName == null) System.exit(0);
+		
 		
 		Socket socket = new Socket();
 		try {
-			socket.connect( new InetSocketAddress( Constants.HOST, Constants.PORT ));
+			socket.connect( new InetSocketAddress( hostName, Constants.PORT ));
 		
 			ServerProxy proxy = new ServerProxy( socket );
 			proxy.start();
@@ -67,7 +68,8 @@ public class RiskClient {
 			proxy.ready();
 			
 			while (!proxy.gameIsStarted()) {
-				Thread.sleep(1000); // wait 1 second for players
+				try {Thread.sleep(1000);}  // wait 1 second for players
+				catch(InterruptedException e) {}
 			} 
 			
 			gui.setListener( proxy );
@@ -79,14 +81,6 @@ public class RiskClient {
 			System.exit(1);
 		}
 		
-	}
-	
-	/**
-	 * Prints a usage message and exits program.
-	 */
-	private static void usage() {
-		System.err.println("Usage: java RiskClient <host> <gameName> [playerName]");
-		System.exit(1);
 	}
 
 }

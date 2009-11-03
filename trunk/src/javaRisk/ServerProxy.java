@@ -1,11 +1,9 @@
 package javaRisk;
 import java.awt.Color;
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +154,6 @@ public class ServerProxy implements UIListener {
 					{
 					case Constants.GAME_STARTING:
 						System.out.println("Game Starting");
-						int numPlayers = input.readInt();
 						model.setPlayers(players);
 						gameStarted = true;
 						
