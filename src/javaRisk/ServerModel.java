@@ -216,6 +216,14 @@ public class ServerModel {
 			currentMove = 0;
 		}
 		
+		while(players.get(currentMove).getNumTerritories() == 0) {
+			if(currentMove >= players.size()) {
+				currentMove = 0;
+			}else {
+				currentMove++;
+			}
+		}
+		
 		Iterator<ClientProxy> iterator = listeners.keySet().iterator();
 		while(iterator.hasNext()) {
 			try {
@@ -246,6 +254,17 @@ public class ServerModel {
 			army.changeCount( 1 );
 			updateTerritory(territory.getIndex(), territory);
 			numArmies--;
+		}
+	}
+	
+	public void winnerFound(Player winner) {
+		Iterator<ClientProxy> iterator = listeners.keySet().iterator();
+		while(iterator.hasNext()) {
+			try {
+				iterator.next().winnerFound(winner);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
