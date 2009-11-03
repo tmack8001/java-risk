@@ -79,7 +79,7 @@ public class ServerModel {
 	
 	public void placeArmies() {
 		System.out.println("placearmies");
-		int terrPerPlayer = (int) (territories.size() / players.size());
+		int terrPerPlayer = (int) (territories.size() / players.size()) + 1;
 		for(int i=0; i<territories.size(); i++) {
 			boolean assigned = false;
 			while(!assigned) {
@@ -232,11 +232,11 @@ public class ServerModel {
 	}
 	
 	private void fortify() {
-		/*int playerIndex = currentMove - 1;
+		int playerIndex = currentMove - 1;
 		if(playerIndex < 0) {
 			playerIndex = players.size()-1;
 		}
-		System.out.println("fortify " + playerIndex);*/
+		System.out.println("fortify " + playerIndex);
 	}
 	
 	public static void main(String[] args) {
