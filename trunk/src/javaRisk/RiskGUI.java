@@ -15,6 +15,7 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
@@ -147,10 +148,8 @@ public class RiskGUI extends JFrame {
 	}
 
 	public void showAttack(int src, int dest) {
-//		gridTiles[src].setBorder(new BevelBorder(BevelBorder.RAISED));
-//		gridTiles[dest].setBorder(new LineBorder(gridTiles[src].getBackground(), 10));
-//		Thread.sleep(500);
-//		reset();
+		//TODO figure out how to show attack if possible
+		
 	}
 
 	public void showAttackRoll(int a_roll) {
@@ -191,14 +190,12 @@ public class RiskGUI extends JFrame {
 	
 	public void setNames(String[] names)
 	{
-		
 		this.names = names;
 		playerTitles = new JLabel[names.length];
 		
 		buttonPanel.removeAll();
 		for (int i = 0 ; i < playerTitles.length ; i++)
 		{
-		
 			playerTitles[i] = new JLabel(names[i]);
 			playerTitles[i].setForeground(listener.requestPlayerColor(i));
 			buttonPanel.add(playerTitles[i]);
@@ -207,5 +204,19 @@ public class RiskGUI extends JFrame {
 		buttonPanel.add(endTurn);
 		
 	}
+
+	public void youWin() {
+		JOptionPane.showMessageDialog(null, "You win !!!");
+	}
+	
+	public void youLose() {
+		JOptionPane.showMessageDialog(null, "You lose :(");
+	}
+
+	public void gameAlreadyStarted() {
+		JOptionPane.showMessageDialog(null, "Sorry, the game was already started.");;
+	}
+	
+	
 		
 }
