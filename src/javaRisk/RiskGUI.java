@@ -103,6 +103,7 @@ public class RiskGUI extends JFrame {
 		
 		playerTitles = new JLabel[0];
 		
+		endTurn.setEnabled(false);
 		endTurn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -207,40 +208,5 @@ public class RiskGUI extends JFrame {
 		buttonPanel.add(endTurn);
 		
 	}
-	
-	public static void main(String args[]) throws Exception
-	{
-		//TESTING THE GUI
-		Socket s = new Socket("localhost", 1988);
 		
-		RiskGUI g = new RiskGUI();
-		g.setNames(new String[]{"Joe","Bob","Tom","Al","Mike","Dan"});
-		ServerProxy sp = new ServerProxy(s);
-		
-		g.setListener(sp);
-		sp.setGUI(g);
-		g.setVisible(true);
-		java.util.Random r = new java.util.Random();
-		
-		ClientModel m = new ClientModel();
-		sp.setModel(m);
-		
-		m.setMe(0);
-		
-		
-		for (int i = 0 ; i < 6 ; i++)
-		{
-			Color col = Color.getHSBColor(r.nextFloat(), 1.0f, 1.0f);
-			m.fillPlayerData(i, col, "Player " + i);
-		}
-		
-		sp.start();
-
-		
-		
-		
-	
-	}
-	
-	
 }

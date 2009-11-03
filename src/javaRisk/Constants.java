@@ -50,7 +50,7 @@ public final class Constants {
 	public static final byte END_TURN = 4;
 	
 	/**
-	 * GAME_STARTING -- args: number_of_players
+	 * GAME_STARTING
 	 */
 	public static final byte GAME_STARTING = 5;
 	
