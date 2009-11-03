@@ -156,16 +156,18 @@ public class ClientProxy {
 		ServerModel model = SessionMap.getSession(name);
 		//check if game already started
 		if(model.isGameStarted()) {
-			this.gameAlreadyStarted();
+			this.gameAlreadyStarted(true);
 		}else {
+			this.gameAlreadyStarted(false);
 			model.addListener(this);
 			this.setModel(model);
 		}
 	}
 	
-	private void gameAlreadyStarted() throws IOException {
-		System.out.println("Game already started");
+	private void gameAlreadyStarted(boolean b) throws IOException {
+		System.out.println("Game already started?");
 		output.writeByte(Constants.GAME_ALREADY_STARTED);
+		output.writeBoolean(b);
 		output.flush();
 	}
 
