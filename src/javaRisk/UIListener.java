@@ -14,5 +14,6 @@ public interface UIListener {
 	public void clicked(int territory) throws IOException;
 
 	public Color requestPlayerColor(int player);
-	
+
+	public void joinGame(String gameName) throws IOException;
 }
