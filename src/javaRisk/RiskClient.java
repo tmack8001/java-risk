@@ -23,7 +23,7 @@ public class RiskClient {
 	 * 
 	 * @param args	command line arguments
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		if( args.length < 2 || args.length > 3) usage();
 		
 		String hostName = args[0];
@@ -41,6 +41,14 @@ public class RiskClient {
 			ServerProxy proxy = new ServerProxy( socket );
 			proxy.start();
 
+			ClientModel model = new ClientModel();
+			
+			RiskGUI gui = new RiskGUI();
+			
+			proxy.setGUI(gui);
+			
+			proxy.setModel(model);
+			
 			proxy.joinGame(gameName);
 			proxy.playerInfo(playerName);
 			
@@ -57,17 +65,25 @@ public class RiskClient {
 				}
 			}
 			proxy.ready();
-
+			
+			
 			//game never gets ready ... need to figure out why
-			while (!proxy.gameIsStarted()) {} // wait for game to be ready
+			while (!proxy.gameIsStarted()) {
+				Thread.sleep(1000); // we can wait 1 second
+			} // wait for game to be ready
 
+
+			
 			String[] names = { "Johnny", "Billy" };
-			RiskGUI gui = new RiskGUI( names );//proxy.getPlayerNames()); 
+			gui.setNames(proxy.getPlayerNames()); 
 
 			//proxy.addPlayer(playerName);
 
+			
 			gui.setListener( proxy );
 
+			gui.setVisible(true);
+			
 		} catch (IOException e) {
 			System.err.println("Couldn't connect to server:port, " + Constants.HOST + ":" + Constants.PORT);
 			System.exit(1);
