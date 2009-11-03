@@ -2,6 +2,7 @@ package javaRisk;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,9 +33,11 @@ public class RiskGUI extends JFrame {
 	private JLabel[] gridTiles;
 	private JLabel[] playerTitles;
 	
+	private JPanel buttonPanel;
+	
 	private String[] names;
 
-	public RiskGUI(String[] playerNames)
+	public RiskGUI()
 	{
 		super("Risk");
 		this.setLayout(new BorderLayout());
@@ -47,8 +50,6 @@ public class RiskGUI extends JFrame {
 				} catch (IOException ex) {}
 			}
 		});
-		
-		names = playerNames;
 		
 		JPanel mainGrid = new JPanel(new GridLayout(Constants.BOARD_SIZE,Constants.BOARD_SIZE));
 		gridTiles = new JLabel[49];
@@ -82,23 +83,24 @@ public class RiskGUI extends JFrame {
 		bottomPanel.setBorder(new BevelBorder(BevelBorder.RAISED));
 		
 		JPanel infoLine = new JPanel(new GridLayout(1,0));
+		JLabel ar = new JLabel("Attacker Roll: ");
+		JLabel dr = new JLabel("Defender Roll: ");
 		
-		infoLine.add(new JLabel("Attacker Roll: "));
+		Font f = new Font("Arial", Font.PLAIN, 24);
+		
+		ar.setFont(f);
+		dr.setFont(f);
+		attackRoll.setFont(f);
+		defendRoll.setFont(f);
+		
+		infoLine.add(ar);
 		infoLine.add(attackRoll);
-		infoLine.add(new JLabel("Defender Roll: "));
+		infoLine.add(dr);
 		infoLine.add(defendRoll);
 		
-		JPanel buttonPanel = new JPanel(new GridLayout(1,0));
+		buttonPanel = new JPanel(new GridLayout(1,0));
 		
-		playerTitles = new JLabel[names.length];
 		
-		for (int i = 0 ; i < playerTitles.length ; i++)
-		{
-		
-			playerTitles[i] = new JLabel(names[i]);
-			buttonPanel.add(playerTitles[i]);
-			
-		}
 		
 		
 		endTurn.addActionListener(new ActionListener() {
@@ -146,9 +148,10 @@ public class RiskGUI extends JFrame {
 	}
 
 	public void showAttack(int src, int dest) {
-		gridTiles[src].setBorder(new BevelBorder(BevelBorder.RAISED));
-		gridTiles[dest].setBorder(new LineBorder(gridTiles[src].getBackground(), 10));
-		
+//		gridTiles[src].setBorder(new BevelBorder(BevelBorder.RAISED));
+//		gridTiles[dest].setBorder(new LineBorder(gridTiles[src].getBackground(), 10));
+//		Thread.sleep(500);
+//		reset();
 	}
 
 	public void showAttackRoll(int a_roll) {
@@ -187,13 +190,28 @@ public class RiskGUI extends JFrame {
 		this.listener = listener;
 	}
 	
+	public void setNames(String[] names)
+	{
+		
+		this.names = names;
+		playerTitles = new JLabel[names.length];
+		
+		for (int i = 0 ; i < playerTitles.length ; i++)
+		{
+		
+			playerTitles[i] = new JLabel(names[i]);
+			buttonPanel.add(playerTitles[i]);
+			
+		}
+	}
+	
 	public static void main(String args[]) throws Exception
 	{
 		//TESTING THE GUI
-		Socket s = new Socket("129.21.141.104", 1988);
+		Socket s = new Socket("localhost", 1988);
 		
-		RiskGUI g = new RiskGUI(new String[]{"Joe","Bob","Tom","Al","Mike","Dan"});
-		
+		RiskGUI g = new RiskGUI();
+		g.setNames(new String[]{"Joe","Bob","Tom","Al","Mike","Dan"});
 		ServerProxy sp = new ServerProxy(s);
 		
 		g.setListener(sp);
@@ -201,7 +219,7 @@ public class RiskGUI extends JFrame {
 		g.setVisible(true);
 		java.util.Random r = new java.util.Random();
 		
-		ClientModel m = new ClientModel(6);
+		ClientModel m = new ClientModel();
 		sp.setModel(m);
 		
 		m.setMe(0);
