@@ -47,7 +47,7 @@ public class Territory {
 			int attackingRoll = attackingArmy.getRoll( ATTACK );
 			int defendingRoll = defendingArmy.getRoll( DEFEND );
 			
-			int[] attackResults = new int[3];
+			int[] attackResults = new int[4];
 			attackResults[0] = this.getIndex();
 			attackResults[1] = territory.getIndex();
 			attackResults[2] = attackingRoll;
