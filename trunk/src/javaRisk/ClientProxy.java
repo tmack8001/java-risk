@@ -42,7 +42,7 @@ public class ClientProxy {
 	public void attackLaunched(int src, int dest) throws IOException {
 		model.attack(src, dest);
 		if(model.getWinner() != null) {
-			winnerFound(model.getWinner());
+			model.winnerFound(model.getWinner());
 		}
 	}
 	
