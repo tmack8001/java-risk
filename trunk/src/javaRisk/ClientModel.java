@@ -8,22 +8,17 @@ import java.util.HashMap;
 
 public class ClientModel {
 
-	private ArrayList<Territory> territories;
-	private ArrayList<Player> players;
+	private List<Territory> territories;
+	private List<Player> players;
 	
 	private int me;
 	
 	private int clicked;
 	
-	public ClientModel(int numPlayers)
+	public ClientModel()
 	{
-		players = new ArrayList<Player>(numPlayers);
+		players = new ArrayList<Player>();
 		territories = new ArrayList<Territory>(Constants.BOARD_SIZE*Constants.BOARD_SIZE);
-		
-		for (int n = 0 ; n < numPlayers ; n++)
-		{
-			players.add(new Player(n, "", null));
-		}
 		
 		int i = 0;
 		for (int r = 0 ; r < Constants.BOARD_SIZE ; r++)
@@ -74,7 +69,7 @@ public class ClientModel {
 	
 	public void fillPlayerData(int index, Color color, String name)
 	{
-		players.set(index, new Player(index, name, color));
+		players.add(new Player(index, name, color));
 	}
 	
 	public void updateTerritory(int index, int owner, int size) {
@@ -89,12 +84,10 @@ public class ClientModel {
 		{
 			names.add(p.getName());
 		}
-		return (String[])names.toArray();
+		return names.toArray(new String[0]);
 	}
 
 	public void setPlayers(List<Player> players2) {
-		for (Player player : players2) {
-			players.set(player.getIndex(), player);
-		}
+		players = players2;
 	}
 }
