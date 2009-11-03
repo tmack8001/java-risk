@@ -39,13 +39,28 @@ public class ClientProxy {
 		this.model.setPlayer(me.getIndex(), me);
 	}
 	
-	public void attackLaunched(int src, int dest) {
+	public void attackLaunched(int src, int dest) throws IOException {
 		model.attack(src, dest);
+		if(model.getWinner() != null) {
+			winnerFound(model.getWinner());
+		}
 	}
 	
 	/**
 	 * 
-	 * @param currentTurn
+	 * @param player
+	 * @throws IOException
+	 */
+	public void winnerFound(Player player) throws IOException {
+		System.out.println("Winner Found " + player.getIndex());
+		output.writeByte(Constants.GAME_FINISHED);
+		output.writeInt(player.getIndex());
+		output.flush();
+	}
+	
+	/**
+	 * 
+	 * @param player
 	 * @throws IOException
 	 */
 	public void playerInfo(Player player) throws IOException {

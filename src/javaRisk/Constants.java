@@ -85,4 +85,8 @@ public final class Constants {
 	 */
 	public static final byte GAME_TO_JOIN = 11;
 	
+	/**
+	 * GAME_STARTING -- args: player-num
+	 */
+	public static final byte GAME_FINISHED = 12;
 }

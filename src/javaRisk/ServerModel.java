@@ -126,7 +126,7 @@ public class ServerModel {
 		}
 	}
 	
-	public void updateTerritory(int index, Territory newTerritory) {
+	public synchronized void updateTerritory(int index, Territory newTerritory) {
 		territories.set(index, newTerritory);
 		
 		int[] territoryStatus = new int[3];
@@ -237,6 +237,16 @@ public class ServerModel {
 			playerIndex = players.size()-1;
 		}
 		System.out.println("fortify " + playerIndex);
+		Player player = players.get(playerIndex);
+		int numArmies = player.getNumTerritories() / 2;
+		if( numArmies <= 0 ) numArmies = 1;
+		while(numArmies > 0) {
+			Territory territory = player.getRandomTerritory();
+			Army army = territory.getArmy();
+			army.changeCount( 1 );
+			updateTerritory(territory.getIndex(), territory);
+			numArmies--;
+		}
 	}
 	
 	public static void main(String[] args) {
