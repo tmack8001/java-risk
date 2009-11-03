@@ -84,7 +84,7 @@ public class ServerModel {
 			boolean assigned = false;
 			while(!assigned) {
 				Player player = players.get( rand.nextInt(players.size()) );
-				if( player.getTerritories().size() < terrPerPlayer || true) {
+				if( player.getTerritories().size() < terrPerPlayer ) {
 					int armySize = randomArmySize(player);
 					Territory t = territories.get(i);
 					t.setArmy(new Army(player, armySize));
@@ -213,7 +213,6 @@ public class ServerModel {
 	
 	public void incrementMove() {
 		if(++currentMove >= players.size()) {
-			// fortify armies
 			currentMove = 0;
 		}
 		
@@ -225,10 +224,19 @@ public class ServerModel {
 				e.printStackTrace();
 			}
 		}
+		fortify();
 	}
 	
 	public void setPlayer(int index, Player player) {
 		players.set(index, player);
+	}
+	
+	private void fortify() {
+		/*int playerIndex = currentMove - 1;
+		if(playerIndex < 0) {
+			playerIndex = players.size()-1;
+		}
+		System.out.println("fortify " + playerIndex);*/
 	}
 	
 	public static void main(String[] args) {
