@@ -11,11 +11,7 @@ public final class Constants {
 	 * PORT
 	 */
 	public static final int PORT = 1988;
-	
-	/**
-	 * BOARD_SIZE
-	 */
-	public static final int BOARD_SIZE = 7;
+
 	
 	/**
 	 * ROW_SIZE -- constant number of rows in a risk game

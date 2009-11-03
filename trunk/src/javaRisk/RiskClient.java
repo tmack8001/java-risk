@@ -53,7 +53,7 @@ public class RiskClient {
 			
 			proxy.joinGame(gameName);
 			proxy.playerInfo(playerName);
-			
+			gui.setListener( proxy );
 			int result = -1;
 			
 			while (result != JOptionPane.YES_OPTION)
@@ -72,8 +72,6 @@ public class RiskClient {
 				try {Thread.sleep(1000);}  // wait 1 second for players
 				catch(InterruptedException e) {}
 			} 
-			
-			gui.setListener( proxy );
 
 			gui.setVisible(true);
 			

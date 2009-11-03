@@ -11,16 +11,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.LineBorder;
 
 public class RiskGUI extends JFrame {
+
+	private static final long serialVersionUID = 1L;
 
 	private UIListener listener;
 	
@@ -51,9 +51,9 @@ public class RiskGUI extends JFrame {
 			}
 		});
 		
-		JPanel mainGrid = new JPanel(new GridLayout(Constants.BOARD_SIZE,Constants.BOARD_SIZE));
+		JPanel mainGrid = new JPanel(new GridLayout(Constants.ROW_SIZE,Constants.COL_SIZE));
 		gridTiles = new JLabel[49];
-		for (int i = 0 ; i < Constants.BOARD_SIZE*Constants.BOARD_SIZE ; i++)
+		for (int i = 0 ; i < Constants.ROW_SIZE*Constants.COL_SIZE ; i++)
 		{
 			
 			gridTiles[i] = new JLabel(Integer.toString(i+1), JLabel.CENTER);
@@ -68,8 +68,7 @@ public class RiskGUI extends JFrame {
 						try {
 							listener.clicked(internal_i);	
 						} catch (IOException ex) {
-							// TODO Auto-generated catch block
-							// do nothing i don't care
+							// do nothing
 						}
 					}
 				}
@@ -109,8 +108,7 @@ public class RiskGUI extends JFrame {
 				try {
 					listener.endTurn();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					// do nothing
 				}
 				
 			}
@@ -202,6 +200,7 @@ public class RiskGUI extends JFrame {
 		{
 		
 			playerTitles[i] = new JLabel(names[i]);
+			playerTitles[i].setForeground(listener.requestPlayerColor(i));
 			buttonPanel.add(playerTitles[i]);
 			
 		}
