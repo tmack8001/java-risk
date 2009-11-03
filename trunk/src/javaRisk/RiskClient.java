@@ -66,19 +66,9 @@ public class RiskClient {
 			}
 			proxy.ready();
 			
-			
-			//game never gets ready ... need to figure out why
 			while (!proxy.gameIsStarted()) {
-				Thread.sleep(1000); // we can wait 1 second
-			} // wait for game to be ready
-
-
-			
-			String[] names = { "Johnny", "Billy" };
-			gui.setNames(proxy.getPlayerNames()); 
-
-			//proxy.addPlayer(playerName);
-
+				Thread.sleep(1000); // wait 1 second for players
+			} 
 			
 			gui.setListener( proxy );
 
