@@ -112,6 +112,18 @@ public class ClientProxy {
 		output.flush();
 	}
 	
+	/**
+	 * 
+	 * @param currentTurn
+	 * @throws IOException
+	 */
+	public void whoAmI() throws IOException {
+		System.out.println("Who am I " + this.me.getIndex() + " players");
+		output.writeByte(Constants.WHO_AM_I);
+		output.writeInt(this.me.getIndex());
+		output.flush();
+	}
+	
 	public void signalEndTurn() {
 		model.incrementMove();
 	}

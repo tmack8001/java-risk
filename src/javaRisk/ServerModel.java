@@ -84,7 +84,7 @@ public class ServerModel {
 			boolean assigned = false;
 			while(!assigned) {
 				Player player = players.get( rand.nextInt(players.size()) );
-				if( player.getTerritories().size() < terrPerPlayer) {
+				if( player.getTerritories().size() < terrPerPlayer || true) {
 					int armySize = randomArmySize(player);
 					Territory t = territories.get(i);
 					t.setArmy(new Army(player, armySize));
@@ -152,6 +152,7 @@ public class ServerModel {
 				for (Player player : players) {
 					proxy.playerInfo(player);
 				}
+				proxy.whoAmI();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
