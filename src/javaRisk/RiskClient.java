@@ -1,6 +1,3 @@
-/**
- * RiskClient.java
- */
 package javaRisk;
 
 import java.io.IOException;
@@ -10,30 +7,44 @@ import java.net.Socket;
 import javax.swing.JOptionPane;
 
 /**
- * Class RiskClient is the client main program for the java implementation
- * of the classic multi-player board game, Risk.
+ * RiskClient is the client main program for the Java implementation
+ * of the classic multiplayer board game, Risk.
  * 
  * @author Trevor Mack
+ * @author Dylan Hall
  *
  */
 public class RiskClient {
 	
 	/**
-	 * Main program.
+	 * Main program. Displays 3 input dialogs for the user to enter
+	 * user name, server address, and game name, then a dialog for
+	 * the user to confirm he is ready. Once all connected users are
+	 * ready, the game is started and the GUI is launched.
 	 * 
 	 * @param args	command line arguments (ignored)
 	 */
 	public static void main(String[] args) {
 
+		// null checks exit the game if the user clicked cancel
 		String playerName = JOptionPane.showInputDialog("Enter your name:");
-		if (playerName == null)System.exit(0);
-		if (playerName.equals("")) playerName = "Risk Player";
+		if (playerName == null)
+			System.exit(0);
+		
+		
+		if (playerName.equals("")) 
+		{
+			int digits = (int) (System.currentTimeMillis() % 100);
+			playerName = "Risk Player " + digits;
+		}
 		
 		String hostName = JOptionPane.showInputDialog("Enter the address of the Risk Server:", "localhost");
-		if (hostName == null) System.exit(0);
+		if (hostName == null)
+			System.exit(0);
 		
 		String gameName = JOptionPane.showInputDialog("Enter the room name:");
-		if (gameName == null) System.exit(0);
+		if (gameName == null) 
+			System.exit(0);
 		
 		
 		Socket socket = new Socket();
@@ -78,6 +89,9 @@ public class RiskClient {
 		} catch (IOException e) {
 			System.err.println("Couldn't connect to server:port, " + Constants.HOST + ":" + Constants.PORT);
 			System.exit(1);
+		} finally
+		{
+			try {socket.close();} catch (IOException e) {}
 		}
 		
 	}
