@@ -157,7 +157,6 @@ public class ServerProxy implements UIListener {
 					case Constants.GAME_STARTING:
 						System.out.println("Game Starting");
 						int numPlayers = input.readInt();
-						model = new ClientModel(numPlayers);
 						model.setPlayers(players);
 						gameStarted = true;
 						
