@@ -197,7 +197,9 @@ public class ServerProxy implements UIListener {
 					case Constants.WHO_AM_I:
 						System.out.println("Who am I?");
 						int me = input.readInt();
-						ServerProxy.this.model.setMe(me);
+						model.setPlayers(players);
+						model.setMe(me);
+						gui.setNames(model.getPlayerNames());
 						
 					default:
 						break;
