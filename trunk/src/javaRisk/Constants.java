@@ -1,5 +1,11 @@
 package javaRisk;
 
+/**
+ * Set of constants used throughout the Risk game system.
+ * 
+ * @author Trevor Mack
+ * @author Dylan Hall
+ */
 public final class Constants {
 
 	/**
