@@ -28,6 +28,7 @@ public class ServerModel {
 	private int currentMove;
 	private int rows, cols;
 	private int readyCount;
+	private boolean gameStarted = false;
 	
 	/*TODO: figure out an algorithm for number of armies per player*/
 	private static final int NUM_ARMY = 40;
@@ -161,6 +162,7 @@ public class ServerModel {
 	
 	public boolean gameStarting() {
 		if(readyCount == players.size()) {
+			gameStarted = true;
 			initializeBoard();
 			placeArmies();
 			
@@ -268,6 +270,13 @@ public class ServerModel {
 		}
 	}
 	
+	/**
+	 * @return the gameStarted
+	 */
+	public boolean isGameStarted() {
+		return gameStarted;
+	}
+
 	public static void main(String[] args) {
 		/* Used for Testing */
 		List<Player> players = new ArrayList<Player>();
