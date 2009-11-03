@@ -101,7 +101,7 @@ public class RiskGUI extends JFrame {
 		buttonPanel = new JPanel(new GridLayout(1,0));
 		
 		
-		
+		playerTitles = new JLabel[0];
 		
 		endTurn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -196,6 +196,7 @@ public class RiskGUI extends JFrame {
 		this.names = names;
 		playerTitles = new JLabel[names.length];
 		
+		buttonPanel.removeAll();
 		for (int i = 0 ; i < playerTitles.length ; i++)
 		{
 		
@@ -203,6 +204,8 @@ public class RiskGUI extends JFrame {
 			buttonPanel.add(playerTitles[i]);
 			
 		}
+		buttonPanel.add(endTurn);
+		
 	}
 	
 	public static void main(String args[]) throws Exception
