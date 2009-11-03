@@ -125,6 +125,10 @@ public class Player {
 	public void setReady(boolean ready) {
 		this.ready = ready;
 	}
+	
+	public int getNumTerritories() {
+		return territories.size();
+	}
 
 	public Territory getTerritory(int index) {
 		return territories.get(new Integer(index));
