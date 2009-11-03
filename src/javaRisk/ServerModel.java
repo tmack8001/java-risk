@@ -172,6 +172,8 @@ public class ServerModel {
 					e.printStackTrace();
 				}
 			}
+			currentMove = -1;
+			incrementMove();
 			return true;
 		}
 		return false;
