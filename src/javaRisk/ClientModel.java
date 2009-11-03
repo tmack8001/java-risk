@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.HashMap;
-
 public class ClientModel {
 
 	private List<Territory> territories;
@@ -18,12 +16,12 @@ public class ClientModel {
 	public ClientModel()
 	{
 		players = new ArrayList<Player>();
-		territories = new ArrayList<Territory>(Constants.BOARD_SIZE*Constants.BOARD_SIZE);
+		territories = new ArrayList<Territory>(Constants.ROW_SIZE*Constants.COL_SIZE);
 		
 		int i = 0;
-		for (int r = 0 ; r < Constants.BOARD_SIZE ; r++)
+		for (int r = 0 ; r < Constants.ROW_SIZE ; r++)
 		{
-			for (int c = 0 ; c < Constants.BOARD_SIZE ; c++)
+			for (int c = 0 ; c < Constants.COL_SIZE ; c++)
 			{
 				Territory curr = new Territory(i, r, c);
 				territories.add(curr);
