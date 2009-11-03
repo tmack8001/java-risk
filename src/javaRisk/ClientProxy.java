@@ -108,7 +108,6 @@ public class ClientProxy {
 	public void gameStarting(int numPlayers) throws IOException {
 		System.out.println("Game starting with " + numPlayers + " players");
 		output.writeByte(Constants.GAME_STARTING);
-		output.writeInt(numPlayers);
 		output.flush();
 	}
 	
