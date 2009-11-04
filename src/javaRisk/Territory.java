@@ -1,25 +1,34 @@
-/**
- * Territory.java
- */
 package javaRisk;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
 /**
+ * The Territory class represents a single territory on the world map.
  * @author Trevor Mack
- *
+ * @author Dylan Hall
  */
 public class Territory {
 
+	/**
+	 * The index of this Territory.
+	 */
 	private int index;
-	//private final ArrayList<Territory> adjacent;
-	private Army army;
-	private final int row,column;
 	
+	/**
+	 * The army on this Territory.
+	 */
+	private Army army;
+	
+	/**
+	 * The row and column on the grid where this Territory is located.
+	 */
+	private final int row,column;
+
+	// flags used for launching an attack
 	private static final boolean ATTACK = true;
 	private static final boolean DEFEND = false;
 	
+	/**
+	 * Smallest size an army can be.
+	 */
 	private static final int MINIMUM_ARMY = 1;
 	
 	/**
@@ -36,9 +45,12 @@ public class Territory {
 	}
 	
 	/**
-	 * 
-	 * @param territory
-	 * @return
+	 * Launch an attack from this territory to another.
+	 * @param territory - the territory to attack from this one
+	 * @return array [0] - this index
+	 * 				 [1] - the other territory index
+	 *  			 [2] - the roll from this territory's army
+	 *  			 [3] - the roll from the other territory's army
 	 */
 	public int[] attack(Territory territory) {
 		if(!getOwner().equals(territory.getOwner()) && getArmy().getCount() > 1 && isAdjacent(territory)) {
@@ -53,8 +65,6 @@ public class Territory {
 			attackResults[2] = attackingRoll;
 			attackResults[3] = defendingRoll;
 			
-			System.out.println(getIndex()+" attack ["+attackingArmy.getCount()+"]: "+attackingRoll);
-			System.out.println(territory.getIndex()+" defend ["+defendingArmy.getCount()+"]: "+defendingRoll);
 			if(attackingRoll > defendingRoll) {
 				Army deployedArmy = new Army(getOwner(), attackingArmy.getCount()-MINIMUM_ARMY);
 				attackingArmy.setCount( MINIMUM_ARMY );
@@ -82,17 +92,6 @@ public class Territory {
 		return (rowDiff + colDiff == 1);
 	}
 	
-	public Territory getAdjacent(HashMap<Integer, Territory> territories2) {
-		Iterator<Integer> iterator = territories2.keySet().iterator();
-		while(iterator.hasNext()) { 
-			Territory territory = territories2.get(iterator.next());
-			if( isAdjacent(territory) ) {
-				return territory;
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * Getter for the army residing on this territory.
 	 * @return army on this territory
