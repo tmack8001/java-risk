@@ -19,7 +19,7 @@ import java.util.Random;
  * 
  */
 public class ServerModel {
-	
+
 	private List<Territory> territories;
 	private List<Player> players;
 	
@@ -90,8 +90,8 @@ public class ServerModel {
 	 */
 	public synchronized void removeListener(ClientProxy client) {
 		Player player = listeners.remove(client);
-		player.surrender();
 		players.remove(player);
+		player.surrender();
 	}
 	
 	/**
@@ -240,7 +240,7 @@ public class ServerModel {
 			Iterator<ClientProxy> iterator = listeners.keySet().iterator();
 			while(iterator.hasNext()) {
 				try {
-					iterator.next().gameStarting(players.size());
+					iterator.next().gameStarting();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -360,6 +360,70 @@ public class ServerModel {
 			updateTerritory(territory.getIndex(), territory);
 			numArmies--;
 		}
+		
+	}
+	
+	/**
+	 * If for some reason a player no longer wants to play the game, his or her connection
+	 * fails or some other network problem exists so that a player is not able to continue
+	 * playing he or she will be considered as "surrendering".
+	 * 
+	 * Surrendering will turn all your territories over to the server to distribute
+	 * evenly to the players who are left "alive" in this current game session.
+	 * 
+	 * @param player	the player object associated with the player surrendering.
+	 */
+	public synchronized void surrender(Player player) {
+		System.out.println("surrender " + player.getIndex());
+		player.setAlive(false);
+		/*
+		if(alivePlayers() == 1) {
+			Iterator<ClientProxy> iterator = listeners.keySet().iterator();
+			while(iterator.hasNext()) {
+				try {
+					iterator.next().winnerFound(getWinner());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}*/
+		
+		HashMap<Integer, Territory> tempTerritories = player.getTerritories();
+		Iterator<Territory> iterator = tempTerritories.values().iterator();
+		while(iterator.hasNext()) {
+			Territory territory = iterator.next();
+			Player randPlayer = getRandomPlayer();
+			
+			Army newArmy = new Army(randPlayer, territory.getArmy().getCount());
+			Territory newTerritory = new Territory(territory.getIndex(), territory.getRow(), territory.getColumn());
+			newTerritory.setArmy(newArmy);
+			
+			updateTerritory(newTerritory.getIndex(), newTerritory);
+		}
+		
+		if(currentMove == player.getIndex())
+			incrementMove();
+		if(getWinner() != null) {
+			winnerFound(getWinner());
+		}
+		
+	}
+	
+	public Player getRandomPlayer() {
+		Player player = players.get(rand.nextInt(players.size()));
+		while(!player.getAlive() && alivePlayers() > 0) {
+			player = getRandomPlayer();
+		}
+		return player;	
+	}
+	
+	public int alivePlayers() {
+		int numPlayersAlive = 0;
+		for(Player player : players) {
+			if(player.getAlive())
+				numPlayersAlive++;
+		}
+		return numPlayersAlive;
 	}
 	
 	/**
@@ -377,6 +441,7 @@ public class ServerModel {
 				e.printStackTrace();
 			}
 		}
+		SessionMap.remove(this);
 	}
 	
 	/**
