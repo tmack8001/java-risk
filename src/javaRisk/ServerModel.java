@@ -441,7 +441,7 @@ public class ServerModel {
 				e.printStackTrace();
 			}
 		}
-		SessionMap.remove(this);
+		SessionMap.removeSession(this);
 	}
 	
 	/**
@@ -453,40 +453,4 @@ public class ServerModel {
 		return gameStarted;
 	}
 
-	/**
-	 * USED FOR DEBUGGING PURPOSES
-	 * @param args	the command line arguments
-	 */
-	public static void main(String[] args) {
-		/* Used for Testing */
-		List<Player> players = new ArrayList<Player>();
-		players.add(new Player(0, "player 1", Color.RED));
-		players.add(new Player(1, "player 2", Color.BLUE));
-		ServerModel gb = new ServerModel(players,4,4);
-		
-		gb.initializeBoard();
-		gb.placeArmies();
-		gb.setCurrentMove(0);
-		
-		while(gb.getWinner() == null) {
-			Player attacker = players.get(gb.getCurrentMove());
-			gb.incrementMove();
-			Player defender = players.get(gb.getCurrentMove());
-			int[] attacked = null;
-			System.out.println("ATTACKER: " +attacker.getName());
-			System.out.println("DEFENDER: " +defender.getName());
-			while(attacked != null) {
-				Territory attacking = attacker.getRandomTerritory();
-				Territory defending = attacking.getAdjacent(defender.getTerritories());
-				//Territory defending = defender.getRandomTerritory();
-				if(defending != null)
-					attacked = attacking.attack(defending);
-				else {
-					System.out.println("INFINITE");
-				}
-			}
-		}
-		System.out.println("WINNER FOUND!");
-		System.out.println(gb.getWinner().getName());
-	}
 }
