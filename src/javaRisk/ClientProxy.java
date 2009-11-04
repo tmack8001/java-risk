@@ -176,7 +176,7 @@ public class ClientProxy {
 	 */
 	public void surrender() {
 		if(model != null)
-			model.removeListener(this);
+			model.surrender(me);
 	}
 	
 	/**
