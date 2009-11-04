@@ -242,6 +242,14 @@ public class ServerProxy implements UIListener {
 	}
 	
 	/**
+	 * Request from the model the number of territories a player has.
+	 * @param player - the player index to check
+	 */
+	public int requestPlayerCount(int player) {
+		return players.get(player).getNumTerritories();
+	}
+	
+	/**
 	 * Start this ServerProxy reading data from the server.
 	 */
 	public void start() {
@@ -348,6 +356,8 @@ public class ServerProxy implements UIListener {
 
 
 	}
+
+	
 
 
 }

@@ -16,4 +16,6 @@ public interface UIListener {
 	public Color requestPlayerColor(int player);
 
 	public void joinGame(String gameName) throws IOException;
+
+	public int requestPlayerCount(int player);
 }
