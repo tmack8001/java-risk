@@ -1,6 +1,7 @@
 package javaRisk;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * The SessionMap class associates a name to each current instance of a running game.
@@ -20,7 +21,7 @@ public class SessionMap {
 	 * @param sessionName - the game name
 	 * @return a session associated with that name
 	 */
-	public static ServerModel getSession(String sessionName)
+	public synchronized static ServerModel getSession(String sessionName)
 	{
 		ServerModel model = map.get(sessionName);
 		
@@ -31,6 +32,28 @@ public class SessionMap {
 		}
 		
 		return model;
+	}
+	
+	/**
+	 * Remove a session from the 
+	 * @param sessionName
+	 */
+	public synchronized static void removeSession(ServerModel game)
+	{
+		Iterator<ServerModel> itr = map.values().iterator();
+		
+		while(itr.hasNext())
+		{
+			ServerModel curr = itr.next();
+			if (curr == game)
+			{
+				// identity equality should be enough
+				
+				itr.remove();
+				break;
+			}
+		}
+		
 	}
 	
 }
