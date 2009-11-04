@@ -64,6 +64,11 @@ public class ServerProxy implements UIListener {
 	private boolean gameStarted = false;
 	
 	/**
+	 * Flag for who the winner is.
+	 */
+	private int winner = -1;
+	
+	/**
 	 * Create a new ServerProxy based on the given socket.
 	 * @param socket - the socket connected to the Risk server
 	 */
@@ -340,7 +345,7 @@ public class ServerProxy implements UIListener {
 						break;
 						
 					case Constants.GAME_FINISHED:
-						int winner = input.readInt();
+						winner = input.readInt();
 						if (model.isMe(winner))
 						{
 							gui.youWin();
@@ -367,7 +372,12 @@ public class ServerProxy implements UIListener {
 			{	
 			} catch (IOException e)
 			{
-				e.printStackTrace();
+				if (winner == -1)
+				{
+					// only show a server error if nobody has won yet
+					gui.showServerError();
+				}
+				try {socket.close(); } catch(IOException exc) {}
 			}
 		}
 	}
