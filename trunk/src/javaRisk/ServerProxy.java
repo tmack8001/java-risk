@@ -25,6 +25,11 @@ public class ServerProxy implements UIListener {
 	private DataInputStream input;
 	private DataOutputStream output;
 	
+	/**
+	 * Used to determine if the game has already been started.
+	 */
+	private Boolean status = null;
+	
 	private boolean gameStarted = false;
 	
 	/**
@@ -219,6 +224,22 @@ public class ServerProxy implements UIListener {
 	{
 		return model.getPlayerNames();
 	}
+
+	/**
+	 * Reset the value of the "Game already started" status
+	 */
+	public void resetStatus()
+	{
+		status = null;
+	}
+	
+	/**
+	 * Get the value of the "Game already started" status
+	 * @return
+	 */
+	public Boolean gameStatus() {
+		return status;
+	}
 	
 	/**
 	 * Start this ServerProxy reading data from the server.
@@ -303,9 +324,8 @@ public class ServerProxy implements UIListener {
 						
 					case Constants.GAME_ALREADY_STARTED:
 						System.out.println("game already started");
-						gui.gameAlreadyStarted();
-						socket.close();
-						System.exit(0);
+						
+						status = input.readBoolean();
 						break;
 						
 					default:
@@ -324,5 +344,6 @@ public class ServerProxy implements UIListener {
 
 
 	}
+
 
 }
