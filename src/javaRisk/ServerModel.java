@@ -1,6 +1,3 @@
-/**
- * ServerModel.java
- */
 package javaRisk;
 
 import java.awt.Color;
@@ -376,17 +373,6 @@ public class ServerModel {
 	public synchronized void surrender(Player player) {
 		System.out.println("surrender " + player.getIndex());
 		player.setAlive(false);
-		/*
-		if(alivePlayers() == 1) {
-			Iterator<ClientProxy> iterator = listeners.keySet().iterator();
-			while(iterator.hasNext()) {
-				try {
-					iterator.next().winnerFound(getWinner());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}*/
 		
 		HashMap<Integer, Territory> tempTerritories = player.getTerritories();
 		Iterator<Territory> iterator = tempTerritories.values().iterator();
@@ -409,6 +395,11 @@ public class ServerModel {
 		
 	}
 	
+	/**
+	 * Gets a random player that is still alive in this game.
+	 * 
+	 * @return	Player object of player that was randomly choosen.
+	 */
 	public Player getRandomPlayer() {
 		Player player = players.get(rand.nextInt(players.size()));
 		while(!player.getAlive() && alivePlayers() > 0) {
@@ -417,6 +408,11 @@ public class ServerModel {
 		return player;	
 	}
 	
+	/**
+	 * Gets the number of players that are still alive.
+	 * 
+	 * @return	number of alive players
+	 */
 	public int alivePlayers() {
 		int numPlayersAlive = 0;
 		for(Player player : players) {
