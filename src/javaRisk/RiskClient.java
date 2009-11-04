@@ -42,7 +42,7 @@ public class RiskClient {
 		if (hostName == null)
 			System.exit(0);
 		
-		String gameName = JOptionPane.showInputDialog("Enter the room name:");
+		String gameName = JOptionPane.showInputDialog("Enter the game name:");
 		if (gameName == null) 
 			System.exit(0);
 		
@@ -63,6 +63,29 @@ public class RiskClient {
 			proxy.setModel(model);
 			
 			proxy.joinGame(gameName);
+			
+			
+			while (proxy.gameStatus() == null)
+			{
+				try {Thread.sleep(100);}  // wait 1/10 second for response
+				catch(InterruptedException e) {}
+			}
+			
+			while (proxy.gameStatus().booleanValue())
+			{
+				gameName = JOptionPane.showInputDialog("That game has already started. Enter a new game name:");
+				if (gameName == null) 
+					System.exit(0);
+				proxy.joinGame(gameName);
+				proxy.resetStatus();
+				while (proxy.gameStatus() == null)
+				{
+					try {Thread.sleep(100);}  // wait 1/10 second for response
+					catch(InterruptedException e) {}
+				}
+				
+			}
+			
 			proxy.playerInfo(playerName);
 			gui.setListener( proxy );
 			int result = -1;
