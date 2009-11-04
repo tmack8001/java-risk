@@ -124,6 +124,7 @@ public class ServerProxy implements UIListener {
 		gui.showAttack(src, dest);
 		gui.showAttackRoll(a_roll);
 		gui.showDefenseRoll(d_roll);
+		gui.showPlayerTurn(model.getOwnerOfTerr(src));
 	}
 	
 	/**

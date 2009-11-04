@@ -167,4 +167,13 @@ public class ClientModel {
 	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
+
+	/**
+	 * Get the index of the owner of a territory.
+	 * @param src - the territory index
+	 * @return the owner index
+	 */
+	public int getOwnerOfTerr(int src) {
+		return territories.get(src).getOwner().getIndex();
+	}
 }
