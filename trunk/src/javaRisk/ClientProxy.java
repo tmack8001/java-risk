@@ -40,18 +40,10 @@ public class ClientProxy {
 	 */
 	private DataOutputStream output;
 	
-<<<<<<< .mine
 	/**
 	 * Create a ClientProxy from the given socket.
 	 * @param socket - connection to the client
 	 */
-=======
-	/**
-	 * The constructor for a ClientProxy. Initially sets up the connection.
-	 * 
-	 * @param socket	the socket connection that is associated with the user.
-	 */
->>>>>>> .r85
 	public ClientProxy(Socket socket) {
 		this.socket = socket;
 		try {
