@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 
 public class RiskGUI extends JFrame {
 
@@ -135,9 +136,9 @@ public class RiskGUI extends JFrame {
 	public void showPlayerTurn(int player) {
 		for (int i = 0 ; i < playerTitles.length ; i++)
 		{
-			playerTitles[i].setText(names[i]);
+			playerTitles[i].setText(names[i] + "(" + listener.requestPlayerCount(i) + ")");
 		}
-		playerTitles[player].setText(">> " + playerTitles[player].getText() + " <<");
+		playerTitles[player].setText(">> " + playerTitles[player].getText()+ " <<");
 		
 	}
 
@@ -149,6 +150,25 @@ public class RiskGUI extends JFrame {
 
 	public void showAttack(int src, int dest) {
 		//TODO figure out how to show attack if possible
+		
+		JLabel srcT = gridTiles[src];
+		JLabel destT = gridTiles[dest];
+		
+		Color oldSrc = srcT.getBackground();
+		Color oldDest = destT.getBackground();
+		
+		srcT.setBackground(Color.black);
+		destT.setBackground(Color.BLACK);
+		
+		srcT.setBorder(new LineBorder(oldSrc, 3));
+		destT.setBorder(new LineBorder(oldDest, 3));
+		
+		try {Thread.sleep(500);} catch (InterruptedException e){}
+	
+		reset();
+		srcT.setBackground(oldSrc);
+		destT.setBackground(oldDest);
+		
 		
 	}
 
