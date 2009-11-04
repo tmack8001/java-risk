@@ -1,0 +1,63 @@
+To run the Risk game, first make sure all the files are compiled.
+To do this, please see the Developer Manual.
+
+To play a game of Risk, there must be a server running either on your
+local computer, or elsewhere.
+To start a server on your computer, run the following command in the folder
+where the Risk files are located:
+
+java RiskServer
+
+To start a game, run the following command in the folder where the Risk files
+are located:
+
+java RiskClient
+
+After running this command, a dialog box will appear and ask for your name.
+This will be your username when playing the game.
+After this a second dialog box will appear and ask for the address of the
+Risk Server. If the server is running on your computer, leave the value as
+localhost, otherwise enter the location of the Risk server.
+Finally a third dialog box will appear asking for the name of the game to join.
+If the game with this name is already in session, it will ask for another.
+Clicking Cancel on any of the dialog boxes will exit the program.
+
+Once you have selected a username, server, and game name, you will be presented
+with the prompt "Are you ready?"
+Click yes when all the players you want to play with are in the game.
+Clicking no will simply result in the prompt being displayed again.
+Clicking cancel will exit the program.
+
+The game will not start until at least 2 players have joined and indicated
+that they are ready.
+
+When the game starts, you will see a screen like the following:
+<<Screenshot 1 -- game started>>
+
+The main grid is the representation of the game map.
+Each tile is a territory that is owned by a player.
+The number in the territory is the size of the army in that territory.
+Below the grid is a row of space to display the attack roll and defense roll.
+At the bottom is a row of names of players in their color with the number
+of territories they control in parentheses. The current player is indicated
+with his name surrounded by >> <<.
+In the bottom right corner is the End Turn button. This button is disabled
+until it is your turn. 
+
+To play the game when it is your turn, first click on one of your territories,
+then on a neighboring enemy territory. The two territories will be highlighted
+and the rolls will be displayed.
+<<Screenshot 2 - highlighting>>
+Note that the rolls are calculated by a number of dice rolls, where the number
+of dice is the army size.
+If your attack was successful, the enemy territory will become yours, and 
+all but one of your armies will move into that territory. (The one remaining
+army stays in the attacking territory.) Note that this means the attack roll
+uses one fewer die to roll than the army size. 
+If the attack was unsuccessful, the enemy territory is unchanged, and all but
+one army is removed from the attacking territory.
+You are allowed to attack as many times as you are able in one turn.
+When you can make no more moves, click the End Turn button to end your turn.
+
+The game is over when one player controls the entire game board.
+<<Screenshot 3 - you win!!>>
