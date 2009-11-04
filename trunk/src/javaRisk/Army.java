@@ -14,9 +14,6 @@ public class Army {
 	private Player player;
 	private int count;
 	
-	private final int MAX_ATTACK = 6;
-	private final int MAX_DEFEND = 5;
-	
 	public Army(Player player, int count) {
 		this.player = player;
 		this.count = count;
@@ -33,14 +30,8 @@ public class Army {
 	
 	public int getRoll( boolean attack ) {
 		int armyCount = getCount();
-		if( attack ) {
-			if( armyCount > MAX_ATTACK )
-				armyCount = MAX_ATTACK;
-			else 
-				armyCount = armyCount - 1;
-		}else {
-			if( armyCount > MAX_DEFEND )
-				armyCount = MAX_DEFEND;
+		if(attack) {
+			armyCount--;
 		}
 		
 		int totalRoll = 0;
