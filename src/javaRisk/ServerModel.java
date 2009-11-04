@@ -17,19 +17,45 @@ import java.util.Random;
  */
 public class ServerModel {
 
+	/**
+	 * List of all territories on the game board.
+	 */
 	private List<Territory> territories;
+	
+	/**
+	 * List of all players playing the current game.
+	 */
 	private List<Player> players;
 	
+	/**
+	 * Map of ClientProxys to associated player.
+	 */
 	private HashMap<ClientProxy, Player> listeners;
+	
+	/**
+	 * Random used to distribute territories/armies.
+	 */
 	private Random rand = new Random();
 	
+	/**
+	 * Flag for whose move it is.
+	 */
 	private int currentMove;
-	private int rows, cols;
-	private int readyCount;
-	private boolean gameStarted = false;
 	
-	/*TODO: figure out an algorithm for number of armies per player*/
-	private static final int NUM_ARMY = 40;
+	/**
+	 * Size of the board.
+	 */
+	private int rows, cols;
+	
+	/**
+	 * Number of players that have signaled ready.
+	 */
+	private int readyCount;
+	
+	/**
+	 * Flag for if the game has been started yet.
+	 */
+	private boolean gameStarted = false;
 	
 	/**
 	 * Default constructor
@@ -99,7 +125,6 @@ public class ServerModel {
 	 * territories.
 	 */
 	public void initializeBoard() {
-		System.out.println("setup board");
 		int index = 0;
 		for(int row=0; row<rows; row++) {
 			for(int col=0; col<cols; col++) {
@@ -116,7 +141,6 @@ public class ServerModel {
 	 * players starting with the first player (index == 0).
 	 */
 	public void placeArmies() {
-		System.out.println("placearmies");
 		int terrPerPlayer = (int) (territories.size() / players.size()) + 1;
 		for(int i=0; i<territories.size(); i++) {
 			boolean assigned = false;
@@ -150,7 +174,6 @@ public class ServerModel {
 	 * @param defender	the index assigned to the defending territory
 	 */
 	public synchronized void attack(int attacker, int defender) {
-		System.out.println("src: " + attacker + " dest: " + defender);
 		Territory attacking = territories.get(attacker);
 		Territory defending = territories.get(defender);
 		
@@ -347,7 +370,6 @@ public class ServerModel {
 		if(playerIndex < 0) {
 			playerIndex = players.size()-1;
 		}
-		System.out.println("fortify " + playerIndex);
 		Player player = players.get(playerIndex);
 		int numArmies = player.getNumTerritories() / 2;
 		while(numArmies > 0) {
@@ -371,7 +393,6 @@ public class ServerModel {
 	 * @param player	the player object associated with the player surrendering.
 	 */
 	public synchronized void surrender(Player player) {
-		System.out.println("surrender " + player.getIndex());
 		player.setAlive(false);
 		
 		HashMap<Integer, Territory> tempTerritories = player.getTerritories();
