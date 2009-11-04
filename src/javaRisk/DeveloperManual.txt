@@ -1,6 +1,6 @@
 Compiling and running the Risk game is very simple.
-To compile the program, simply copy all the java source files into a folder
-called javaRisk, and run the following command:
+To compile the program, simply copy all the java source files into a folder,
+and run the following command:
 
 javac *.java
 
