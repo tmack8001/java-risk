@@ -35,7 +35,7 @@ public class SessionMap {
 	}
 	
 	/**
-	 * Remove a session from the 
+	 * Remove a session from the map. (i.e. after the game is over) 
 	 * @param sessionName
 	 */
 	public synchronized static void removeSession(ServerModel game)
