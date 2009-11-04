@@ -110,7 +110,7 @@ public class RiskClient {
 			gui.setVisible(true);
 			
 		} catch (IOException e) {
-			System.err.println("Couldn't connect to server:port, " + Constants.HOST + ":" + Constants.PORT);
+			System.err.println("Error: Couldn't connect to server.");
 			System.exit(1);
 		} 
 		
