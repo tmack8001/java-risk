@@ -2,11 +2,14 @@ Network Messages
 ----------------
 
 Network messages in the java project, Risk, are encoded using the DataOutputStream
-object in the Java 1.5.0 or later specifications. Each argument listed below will
-be written to the DataOutputStream one at a time with the given argument type, 
-[boolean, int, byte, UTF, etc...]
+object in the Java 1.5.0 or later specifications. Each argument listed alongside the
+below message types will be written to the DataOutputStream one at a time using the
+given argument type, [boolean, int, byte, UTF, etc...].
 
-opcodes: The following messages are opcodes that are specified in the Constants.java static Object
+BASIC MESSAGE STRUCTURE
+-----------------------
+argument[0]: opcode
+argument[1....N]: arguments to send with related network message
 
 
 SERVER -> CLIENT MESSAGES
