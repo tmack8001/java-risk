@@ -320,6 +320,10 @@ public class ServerProxy implements UIListener {
 						{
 							gui.youLose();
 						}
+						gui.showGamePlayable(false);
+						gui.showPlayerTurn(winner);
+						// the winner gets >> << around his name
+						socket.close();
 						break;
 						
 					case Constants.GAME_ALREADY_STARTED:
