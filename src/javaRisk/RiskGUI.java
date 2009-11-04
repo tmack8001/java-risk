@@ -25,8 +25,8 @@ import javax.swing.border.LineBorder;
  * The layout is a window with a large grid of colored squares, 
  * each representing a territory.
  * At the bottom is a row of usernames and a button to end the user's turn.
- * @author Administrator
- *
+ * @author Dylan Hall
+ * @author Trevor Mack
  */
 public class RiskGUI extends JFrame {
 
