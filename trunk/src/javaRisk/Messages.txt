@@ -1,0 +1,63 @@
+Network Messages
+--------------------
+
+Network messages in the java project, Risk, are encoded using the DataOutputStream
+object in the Java 1.5.0 or later specifications. Each argument listed below will
+be written to the DataOutputStream one at a time with the given argument type, 
+[boolean, int, byte, UTF, etc...]
+
+opcodes: The following messages are opcodes that are specified in the Constants.java static Object
+
+
+SERVER -> CLIENT MESSAGES
+
+GAME_STARTING: byte: Constants.GAME_STARTING
+
+TURN_IND: byte: Constants.TURN_IND
+		  int[0]: player index
+
+ATTACK_MADE: byte: Constants.ATTACK_MADE
+			 int[0]: src-territory index
+			 int[1]: dest-territory index
+			 int[2]: attack die roll
+			 int[3]: defending die roll
+
+TERRITORY_STATUS: byte: Constants.TERRITORY_STATUS
+				  int[0]: territory index
+				  int[1]: owner index
+				  int[2]: army count
+
+PLAYER_INFO: byte: Constants.PLAYER_INFO
+				   int[0]: player index
+				   int[1]: color number
+				   UTF[0]: player name
+
+WHO_AM_I: byte: Constants.WHO_AM_I
+		  int[0]: player index
+
+GAME_FINISHED: byte: Constants.GAME_FINISHED
+			   int[0]: player index
+
+GAME_ALREADY_STARTED: byte: Constants.GAME_ALREADY_STARTED
+					  boolean[0]: game status
+
+
+
+
+CLIENT -> SERVER MESSAGES
+-------------------------
+
+ATTACK: byte: Constants.ATTACK
+		int[0]: src-territory index
+		int[1]: dest-territory index
+
+SURRENDER: byte: Constants.SURRENDER
+
+END_TURN: byte: Constants.END_TURN
+
+GAME_TO_JOIN: byte: Constants.GAME_TO_JOIN
+			  UTF[0]: game name
+
+PLAYER_INFO: byte: Constants.PLAYER_INFO
+			 UTF[0]: player name
+  
