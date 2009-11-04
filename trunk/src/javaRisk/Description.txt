@@ -1,0 +1,19 @@
+Risk is a turn-based board game for 2 or more players.
+The game board is a predefined grid of territories. 
+At the beginning of the game, each territory is randomly assigned to a player
+and a random-sized army is put onto it.
+During a player's turn, he may launch an attack from a territory he controls
+to an adjacent territory. The outcome of the territory is determined
+by rolling dice. The attacking territory rolls one fewer dice than the number
+of armies on that territory. The defending territory rolls the same number of
+dice as armies on that territory. The territory that rolls a higher number
+wins the battle. In the event of a tie, the defending territory wins the 
+battle. If the attack is successful, the attacker gains control of the
+defending territory, and all but one of the armies from the attacking territory
+are moved into it. If the attack is unsuccessful, all but one of the armies of
+the attacking territory are lost.
+A player may choose to end his turn at any time. Once a player ends his turn,
+his territories are randomly fortified. Fortification involves the addition of
+one army per two territories the player controls.
+The game is over once one player controls the entire world map, and that player
+is the winner.
