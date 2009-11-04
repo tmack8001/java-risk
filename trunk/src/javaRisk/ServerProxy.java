@@ -106,7 +106,6 @@ public class ServerProxy implements UIListener {
 	 * User clicked "End Turn" button.
 	 */
 	public void endTurn() throws IOException {
-		System.out.println("I'm Done");
 		output.writeByte(Constants.END_TURN);
 		gui.reset();
 	}
@@ -116,8 +115,7 @@ public class ServerProxy implements UIListener {
 	 * @param src - the index of the attacking territory
 	 * @param dest - the index of the defending territory
 	 */
-	public void launchAttack(int src, int dest) throws IOException{
-		System.out.println(src + " attacks " + dest);
+	public void launchAttack(int src, int dest) throws IOException {
 		output.writeByte(Constants.ATTACK);
 		output.writeInt(src);
 		output.writeInt(dest);
@@ -126,8 +124,7 @@ public class ServerProxy implements UIListener {
 	/**
 	 * User exited the program, causing a surrender.
 	 */
-	public void surrender() throws IOException{
-		System.out.println("Surrender Me");
+	public void surrender() throws IOException {
 		output.writeByte(Constants.SURRENDER);
 		socket.close();
 	}
@@ -190,8 +187,7 @@ public class ServerProxy implements UIListener {
 	 * Set the associated GUI object.
 	 * @param gui - the GUI to set
 	 */
-	public void setGUI(RiskGUI gui)
-	{
+	public void setGUI(RiskGUI gui) {
 		this.gui = gui;
 	}
 	
@@ -201,7 +197,6 @@ public class ServerProxy implements UIListener {
 	 */
 	public void joinGame(String gameName) throws IOException
 	{
-		System.out.println("Join game " + gameName);
 		output.writeByte(Constants.GAME_TO_JOIN);
 		output.writeUTF(gameName);
 		output.flush();
@@ -213,7 +208,6 @@ public class ServerProxy implements UIListener {
 	 */
 	public void playerInfo(String playerName) throws IOException
 	{
-		System.out.println("Send Player Name");
 		output.writeByte(Constants.PLAYER_INFO);
 		output.writeUTF(playerName);
 		output.flush();
@@ -234,7 +228,6 @@ public class ServerProxy implements UIListener {
 	 */
 	public void ready() throws IOException
 	{
-		System.out.println("Ready Me");
 		output.writeByte(Constants.READY);
 		output.flush();
 	}
@@ -304,19 +297,16 @@ public class ServerProxy implements UIListener {
 					switch(curr)
 					{
 					case Constants.GAME_STARTING:
-						System.out.println("Game Starting");
 						model.setPlayers(players);
 						gameStarted = true;
 						
 						break;
 					case Constants.TURN_IND:
-						System.out.println("Turn Ind");
 						int player_num = input.readInt();
 						turnIndicator(player_num);
 						break;
 						
 					case Constants.ATTACK_MADE:
-						System.out.println("Attack Made");
 						int src = input.readInt();
 						int dest = input.readInt();
 						int a_roll = input.readInt();
@@ -326,7 +316,6 @@ public class ServerProxy implements UIListener {
 						break;
 						
 					case Constants.TERRITORY_STATUS:
-						System.out.println("Territory Status");
 						int index = input.readInt();
 						int owner = input.readInt();
 						int size = input.readInt();
@@ -335,7 +324,6 @@ public class ServerProxy implements UIListener {
 						break;
 						
 					case Constants.PLAYER_INFO:
-						System.out.println("Player Info");
 						int player = input.readInt();
 						int rgb = input.readInt();
 						String name = input.readUTF();
@@ -343,7 +331,8 @@ public class ServerProxy implements UIListener {
 						break;
 						
 					case Constants.WHO_AM_I:
-						System.out.println("Who am I?");
+						// Who Am I also used as the signal
+						// that all player info has been sent
 						int me = input.readInt();
 						model.setPlayers(players);
 						model.setMe(me);
@@ -351,7 +340,6 @@ public class ServerProxy implements UIListener {
 						break;
 						
 					case Constants.GAME_FINISHED:
-						System.out.println("Game over");
 						int winner = input.readInt();
 						if (model.isMe(winner))
 						{
@@ -367,8 +355,6 @@ public class ServerProxy implements UIListener {
 						break;
 						
 					case Constants.GAME_ALREADY_STARTED:
-						System.out.println("game already started");
-						
 						status = input.readBoolean();
 						break;
 						
