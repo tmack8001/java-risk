@@ -17,19 +17,50 @@ import java.util.List;
  */
 public class ServerProxy implements UIListener {
 
+	/**
+	 * GUI.
+	 */
 	private RiskGUI gui;
+	
+	/**
+	 * Associated ClientModel.
+	 */
 	private ClientModel model;
+	
+	/**
+	 * List of players playing the current game.
+	 */
 	private List<Player> players = new ArrayList<Player>();
 	
+	/**
+	 * Socket connected to server.
+	 */
 	private Socket socket;
+	
+	/**
+	 * DataInputStream of the socket.
+	 */
 	private DataInputStream input;
+	
+	/**
+	 * DataOutputStream of the socket.
+	 */
 	private DataOutputStream output;
 	
 	/**
-	 * Used to determine if the game has already been started.
+	 * Used to determine if the gamename is already in progress on the server.
+	 * null means not sure yet, true means the name is already in use.
 	 */
 	private Boolean status = null;
 	
+	/**
+	 * Indicates which player's turn it is.
+	 */
+	private int turnIndicator;
+	
+	/**
+	 * Flag for if the game has begun yet.
+	 */
 	private boolean gameStarted = false;
 	
 	/**
@@ -69,7 +100,6 @@ public class ServerProxy implements UIListener {
 				}
 			}
 		}
-		
 	}
 	
 	/**
@@ -108,6 +138,7 @@ public class ServerProxy implements UIListener {
 	 */
 	public void turnIndicator(int player)
 	{
+		turnIndicator = player;
 		gui.showPlayerTurn(player);
 		gui.showGamePlayable(model.isMe(player));
 	}
@@ -124,7 +155,6 @@ public class ServerProxy implements UIListener {
 		gui.showAttack(src, dest);
 		gui.showAttackRoll(a_roll);
 		gui.showDefenseRoll(d_roll);
-		gui.showPlayerTurn(model.getOwnerOfTerr(src));
 	}
 	
 	/**
@@ -136,6 +166,7 @@ public class ServerProxy implements UIListener {
 	public void update(int index, int owner, int size){
 		model.updateTerritory(index, owner, size);
 		gui.updateTerritory(index, model.getPlayerColor(owner), size);
+		gui.showPlayerTurn(turnIndicator);
 	}
 
 
@@ -352,13 +383,7 @@ public class ServerProxy implements UIListener {
 			{
 				e.printStackTrace();
 			}
-
 		}
-
-
 	}
-
-	
-
 
 }
