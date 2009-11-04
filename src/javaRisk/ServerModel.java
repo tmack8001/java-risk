@@ -1,5 +1,5 @@
 /**
- * GameBoard.java
+ * ServerModel.java
  */
 package javaRisk;
 
@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Representation of a general Risk Game.
+ * Representation of a general Risk Game for server side execution.
  * 
  * @author Trevor Mack
+ * @author Dylan Hall
  * 
  */
 public class ServerModel {
@@ -33,10 +34,20 @@ public class ServerModel {
 	/*TODO: figure out an algorithm for number of armies per player*/
 	private static final int NUM_ARMY = 40;
 	
+	/**
+	 * Default constructor
+	 */
 	public ServerModel() {
 		this(new ArrayList<Player>(), Constants.ROW_SIZE, Constants.COL_SIZE);
 	}
 	
+	/**
+	 * The constructor for the Server Model.
+	 * 
+	 * @param players	list of players for this game
+	 * @param rows		number of rows in the board
+	 * @param cols		number of columns in the board
+	 */
 	public ServerModel(List<Player> players, int rows, int cols) {
 		territories = new ArrayList<Territory>();
 		listeners = new HashMap<ClientProxy, Player>();
@@ -46,6 +57,11 @@ public class ServerModel {
 		readyCount = 0;
 	}
 	
+	/**
+	 * Add a ClientProxy to the list of clients for this instance with a default name.
+	 * 
+	 * @param client	ClientProxy to added to list of players
+	 */
 	public synchronized void addListener(ClientProxy client) {
 		Player player = new Player(players.size(), "Player " + players.size(), 
 				Color.getHSBColor(rand.nextFloat(), 1.0f, 1.0f));
@@ -54,6 +70,12 @@ public class ServerModel {
 		listeners.put(client, player);
 	}
 	
+	/**
+	 * Add a ClientProxy to the list of clients for this instance with a default name.
+	 * 
+	 * @param client
+	 * @param name
+	 */
 	public synchronized void addListener(ClientProxy client, String name) {
 		Player player = new Player(players.size(), name, 
 				Color.getHSBColor(rand.nextFloat(), 1.0f, 1.0f));
@@ -61,12 +83,24 @@ public class ServerModel {
 		listeners.put(client, player);
 	}
 	
+	/**
+	 * Removes a client from the list of listeners.
+	 * 
+	 * @param client	the ClientProxy to remove
+	 */
 	public synchronized void removeListener(ClientProxy client) {
 		Player player = listeners.remove(client);
 		player.surrender();
 		players.remove(player);
 	}
 	
+	/**
+	 * Initially used to setup a game board. Loops over all the rows and columns
+	 * to create initialized territories.
+	 * 
+	 * Global variable territories is changed to consist of the newly generated
+	 * territories.
+	 */
 	public void initializeBoard() {
 		System.out.println("setup board");
 		int index = 0;
@@ -78,6 +112,12 @@ public class ServerModel {
 		currentMove = 0;
 	}
 	
+	/**
+	 * Once the initial board is setup the armies that belong to the list current list
+	 * of players can be placed on random territories. This method guarantees that each player
+	 * received approximately the same number of territories, with the extras going to
+	 * players starting with the first player (index == 0).
+	 */
 	public void placeArmies() {
 		System.out.println("placearmies");
 		int terrPerPlayer = (int) (territories.size() / players.size()) + 1;
@@ -86,7 +126,7 @@ public class ServerModel {
 			while(!assigned) {
 				Player player = players.get( rand.nextInt(players.size()) );
 				if( player.getTerritories().size() < terrPerPlayer ) {
-					int armySize = randomArmySize(player);
+					int armySize = (rand.nextInt(7) + 1);
 					Territory t = territories.get(i);
 					t.setArmy(new Army(player, armySize));
 					updateTerritory(t.getIndex(), t);
@@ -96,10 +136,22 @@ public class ServerModel {
 		}
 	}
 	
-	private int randomArmySize( Player player ) {
-		return (rand.nextInt(7) + 1);
-	}
-	
+	/**
+	 * This is the method that contains the attacking logic for the Risk Model.
+	 * The given attacking territory will roll for each of it's attacking members
+	 * a dice and that final roll value (sum of all rolls) will be compared to
+	 * the defenders value to see who wins. If the attacker's value is great than
+	 * the defender's value then the win goes to the attacker.
+	 * 
+	 * If the attacker wins then N-1 army members will advance on to the defending
+	 * territory.
+	 * 
+	 * If the defender wins then the attacking territory loses its attacking army (N-1)
+	 * and the attacking territory is left with 1 army member on it.
+	 * 
+	 * @param attacker	the index assigned to the attacking territory
+	 * @param defender	the index assigned to the defending territory
+	 */
 	public synchronized void attack(int attacker, int defender) {
 		System.out.println("src: " + attacker + " dest: " + defender);
 		Territory attacking = territories.get(attacker);
@@ -127,6 +179,15 @@ public class ServerModel {
 		}
 	}
 	
+	/**
+	 * This method, updateTerritory, will go into the model and update a territory
+	 * with a new territory reference. This will also send a network message using
+	 * the clientProxy class out communicate with every listener on this model
+	 * instance about this change.
+	 * 
+	 * @param index			the index number associated with the territory
+	 * @param newTerritory	the new territory reference
+	 */
 	public synchronized void updateTerritory(int index, Territory newTerritory) {
 		territories.set(index, newTerritory);
 		
@@ -145,6 +206,10 @@ public class ServerModel {
 		}
 	}
 	
+	/**
+	 * Iterates across the model sending player information (index, name, color) to
+	 * all of the connected players using the ClientProxy class.
+	 */
 	public void playerInfo() {
 		Iterator<ClientProxy> iterator = listeners.keySet().iterator();
 		while(iterator.hasNext()) {
@@ -160,6 +225,12 @@ public class ServerModel {
 		}
 	}
 	
+	/**
+	 * Iterates across all the linked clients to send network message that the game
+	 * is ready to begin.
+	 * 
+	 * @return	true if the game started, else false since the game could not start
+	 */
 	public boolean gameStarting() {
 		if(readyCount == players.size()) {
 			gameStarted = true;
@@ -181,6 +252,12 @@ public class ServerModel {
 		return false;
 	}
 	
+	/**
+	 * Calculates to see if there is a winner if there is a winner of the game then
+	 * return that player's information.
+	 * 
+	 * @return	the player object of the winner, else null
+	 */
 	public Player getWinner() {
 		Iterator<Player> iterator = players.iterator();
 		int numAlive = 0;
@@ -197,6 +274,11 @@ public class ServerModel {
 		return winner;
 	}
 	
+	/**
+	 * This method tells the Model that a given user is "ready".
+	 * 
+	 * @param player	the player to set to ready.
+	 */
 	public void ready(Player player) {
 		player.setReady(true);
 		readyCount++;
@@ -207,14 +289,28 @@ public class ServerModel {
 		}
 	}
 	
+	/**
+	 * Getter for currentMove.
+	 * @return	the currentMove number, the index of the player
+	 */
 	public int getCurrentMove() {
 		return currentMove;
 	}
 	
+	/**
+	 * Setter for the currentMove number. This is also modded with the number of
+	 * players in the game as to remove IndexOutOfBounds Exceptions.
+	 * 
+	 * @param currentMove	the index to change the currentMove counter to.
+	 */
 	public void setCurrentMove( int currentMove ) {
-		this.currentMove = currentMove;
+		this.currentMove = currentMove % players.size();
 	}
 	
+	/**
+	 * Increments the currentMove counter by one. This is also modded with the number
+	 * of players in the game as to remove IndexOutOfBounds Exceptions.
+	 */
 	public void incrementMove() {
 		currentMove = (currentMove + 1) % players.size();
 		
@@ -233,10 +329,22 @@ public class ServerModel {
 		fortify();
 	}
 	
+	/**
+	 * This method will set a specified player in the list of current players
+	 * to the given player object.
+	 * 
+	 * @param index		the index of the player object to set
+	 * @param player	the player object associated with this index number
+	 */
 	public void setPlayer(int index, Player player) {
 		players.set(index, player);
 	}
 	
+	/**
+	 * This method executes after each turn to allow the previous player to fortify
+	 * or build up his army counts on his territories. This is implemented server side
+	 * to just randomly add one to a territory that belongs to him. or her.
+	 */
 	private void fortify() {
 		int playerIndex = currentMove - 1;
 		if(playerIndex < 0) {
@@ -247,9 +355,6 @@ public class ServerModel {
 		int numArmies = player.getNumTerritories() / 2;
 		while(numArmies > 0) {
 			Territory territory = player.getRandomTerritory();
-			while(territory.getArmy().getCount() >= 10) {
-				territory = player.getRandomTerritory();
-			}
 			Army army = territory.getArmy();
 			army.changeCount( 1 );
 			updateTerritory(territory.getIndex(), territory);
@@ -257,6 +362,12 @@ public class ServerModel {
 		}
 	}
 	
+	/**
+	 * Once a winner has been found this method will send out that information to all
+	 * the client programs to that they can handle this according.
+	 * 
+	 * @param winner	the player object associated with the winner.
+	 */
 	public void winnerFound(Player winner) {
 		Iterator<ClientProxy> iterator = listeners.keySet().iterator();
 		while(iterator.hasNext()) {
@@ -269,12 +380,18 @@ public class ServerModel {
 	}
 	
 	/**
-	 * @return the gameStarted
+	 * Getter for the sameStarted boolean flag.
+	 * 
+	 * @return gameStarted	true, if the game is in progress else returns false.
 	 */
 	public boolean isGameStarted() {
 		return gameStarted;
 	}
 
+	/**
+	 * USED FOR DEBUGGING PURPOSES
+	 * @param args	the command line arguments
+	 */
 	public static void main(String[] args) {
 		/* Used for Testing */
 		List<Player> players = new ArrayList<Player>();
