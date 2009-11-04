@@ -1,5 +1,5 @@
 Network Messages
---------------------
+----------------
 
 Network messages in the java project, Risk, are encoded using the DataOutputStream
 object in the Java 1.5.0 or later specifications. Each argument listed below will
@@ -10,6 +10,7 @@ opcodes: The following messages are opcodes that are specified in the Constants.
 
 
 SERVER -> CLIENT MESSAGES
+-------------------------
 
 GAME_STARTING: byte: Constants.GAME_STARTING
 
