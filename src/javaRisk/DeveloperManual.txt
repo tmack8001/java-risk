@@ -1,0 +1,24 @@
+Compiling and running the Risk game is very simple.
+To compile the program, simply copy all the java source files into a folder
+called javaRisk, and run the following command:
+
+javac *.java
+
+Note that Risk requires at least Java 1.5.0 be installed. Previous versions
+of Java are not supported.
+
+To run the server, simply run the following command:
+
+java RiskServer
+
+No command line arguments are necessary, and any provided will be ignored.
+The server always runs on port 1988.
+
+To run a client, simply run the following command:
+
+java RiskClient
+
+No command line arguments are necessary, and any provided will be ignored.
+The client will always attempt to run on port 1988.
+Once the client is running, dialog boxes ask for your username, the host name,
+and the game to connect to before displaying the GUI.
