@@ -184,10 +184,12 @@ public class ServerModel {
 	public Player getWinner() {
 		Iterator<Player> iterator = players.iterator();
 		int numAlive = 0;
+		Player temp = null;
 		Player winner = null;
 		while( iterator.hasNext() ) {
-			winner = iterator.next();
-			if(winner.getAlive()) {
+			temp = iterator.next();
+			if(temp.getAlive()) {
+				winner = temp;
 				if(++numAlive > 1)
 					return null;
 			}
@@ -245,6 +247,9 @@ public class ServerModel {
 		int numArmies = player.getNumTerritories() / 2;
 		while(numArmies > 0) {
 			Territory territory = player.getRandomTerritory();
+			while(territory.getArmy().getCount() >= 10) {
+				territory = player.getRandomTerritory();
+			}
 			Army army = territory.getArmy();
 			army.changeCount( 1 );
 			updateTerritory(territory.getIndex(), territory);
