@@ -322,14 +322,24 @@ public class RiskGUI extends JFrame {
 	 * Show message dialog when the user wins.
 	 */
 	public void youWin() {
-		JOptionPane.showMessageDialog(null, "You win !!!");
+		JOptionPane.showMessageDialog(null, "You win !!!", "Win!", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	/**
 	 * Show message dialog when the user does not win.
 	 */
 	public void youLose() {
-		JOptionPane.showMessageDialog(null, "You lose :(");
+		JOptionPane.showMessageDialog(null, "You lose :(", "Lose", JOptionPane.ERROR_MESSAGE);
+	}
+
+	/**
+	 * Show an error message that there was a server error.
+	 */
+	public void showServerError() {
+		if (this.isVisible())
+		{
+			JOptionPane.showMessageDialog(null, "Server Error! :(", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 		
 }
