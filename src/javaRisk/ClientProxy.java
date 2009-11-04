@@ -9,6 +9,9 @@ import java.net.Socket;
 /**
  * The ClientProxy is the interface between the Risk game back end
  * and the network.
+ * 
+ * @author Trevor Mack
+ * @author Dylan Hall
  */
 public class ClientProxy {
 
@@ -19,6 +22,11 @@ public class ClientProxy {
 	private DataInputStream input;
 	private DataOutputStream output;
 	
+	/**
+	 * The constructor for a ClientProxy. Initially sets up the connection.
+	 * 
+	 * @param socket	the socket connection that is associated with the user.
+	 */
 	public ClientProxy(Socket socket) {
 		this.socket = socket;
 		try {
